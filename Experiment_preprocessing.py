@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+#Hellooooooo -*- coding: utf-8 -*-
 import wave
 
 # READ .WAV FILE
