@@ -3,15 +3,15 @@ from scipy.io import wavfile
 from matplotlib import pyplot as plt
 import numpy as np
 import math
+from scipy.fftpack import dct
 
 
-# Load the data and calculate the time of each sample
-samplerate, data = wavfile.read('C:/Users/Loes/Documents/GitHub/Projectstage/audiovoorbeelden/heartbeat-noise-machine.wav')
-
-# Length of sampling Parameter
-p = len(data)
-
-times = np.arange(len(data[:p]))/float(samplerate)
+def read_audio_data(path):
+    # Load the data and calculate the time of each sample
+    samplerate, data = wavfile.read(path)    
+    times = np.arange(len(data[:]))/float(samplerate)
+    
+    return samplerate, data, times
 
 
 
@@ -20,24 +20,23 @@ times = np.arange(len(data[:p]))/float(samplerate)
 # Stereo to Mono
 def stereo_to_mono(audio_data):
     mono = []
-    for i in range(len(audio_data[:p])):
-        mono.append((audio_data[i,0] + data[i,1])/2);
+    for i in range(len(audio_data[:])):
+        mono.append((audio_data[i,0] + audio_data[i,1])/2);
         
     return mono
 
-# =============================================================================
-# # Make the plot
-# # You can tweak the figsize (width, height) in inches
-# plt.figure(figsize=(30, 4))
-# #plt.fill_between(times, data[:p,0], data[:p,1], color='k') 
-# plt.plot(times, mono[:p])
-# plt.xlim(times[0], times[-1])
-# plt.xlabel('time (s)')
-# plt.ylabel('amplitude')
-# # You can set the format by changing the extension
-# # like .pdf, .svg, .eps
-# plt.show()
-# =============================================================================
+def plot_raw_audio_data(time, mono_data):
+    # Make the plot
+    # You can tweak the figsize (width, height) in inches
+    plt.figure(figsize=(30, 4))
+    #plt.fill_between(times, data[:p,0], data[:p,1], color='k') 
+    plt.plot(time, mono_data[:])
+    plt.xlim(time[0], time[-1])
+    plt.xlabel('time (s)')
+    plt.ylabel('amplitude')
+    # You can set the format by changing the extension
+    # like .pdf, .svg, .eps
+    plt.show()
 
 
 # SPLIT VECTOR
