@@ -3,7 +3,7 @@ from scipy.io import wavfile
 from matplotlib import pyplot as plt
 import numpy as np
 import math
-from scipy.fftpack import dct
+#from scipy.fftpack import dct
 
 
 def read_audio_data(path):
