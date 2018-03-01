@@ -1,9 +1,0 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Fri Feb 23 11:11:00 2018
-
-@author: Gebruiker
-"""
-
-import IPython.display as ipd
-ipd.Audio('../data/Train/2022.wav')
