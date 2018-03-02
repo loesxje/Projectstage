@@ -3,6 +3,7 @@ from scipy.io import wavfile
 from matplotlib import pyplot as plt
 import numpy as np
 import math
+from numpy.fft import fft
 #from scipy.fftpack import dct
 
 
@@ -10,20 +11,12 @@ def read_audio_data(path):
     # Load the data and calculate the time of each sample
     samplerate, data = wavfile.read(path)    
     times = np.arange(len(data[:]))/float(samplerate)
+    data = data.astype(float)
+    # Turn audio_data from stereo to mono
+    mono = data.sum(axis = 1) / 2
     
-    return samplerate, data, times
+    return samplerate, mono, times
 
-
-
-
-# VECTORIZE DATA
-# Stereo to Mono
-def stereo_to_mono(audio_data):
-    mono = []
-    for i in range(len(audio_data[:])):
-        mono.append((audio_data[i,0] + audio_data[i,1])/2);
-        
-    return mono
 
 def plot_raw_audio_data(time, mono_data):
     # Make the plot
@@ -55,8 +48,33 @@ def split_vector(time, mono_audio):
 
 
 # FOURIER TRANSFORM DATA
-
-
+    # bron: https://plot.ly/matplotlib/fft/
+def fft_data(intervals):
+    for i in range(len(intervals[0:10])):
+        y = intervals[i+100];
+        Fs = len(y); # sampling rate
+        Ts = 1.0/Fs; # sampling interval
+        t = np.arange(0,1,Ts) # time vector
+        ff = 5; # freq of the signal
+        n = len(y);
+        k = np.arange(n);
+        T = n/Fs
+        frq = k/T; # two sides freq range
+        frq = frq[range(n/2)] # one side freq
+        Y = fft(y); # fft computing and normalization
+        Y = Y[range(n/2)];
+      
+# =============================================================================
+#         fig, ax = plt.subplots(2,1)
+#         ax[0].set_xlabel('Time')
+#         ax[0].set_ylabel('Amplitude')
+#         ax[0].plot(t,intervals[i+100])
+#         ax[1].set_xlabel('Freq (Hz)')
+#         ax[1].set_ylabel('|Y(freq)|')
+#         ##### Not sure if E_F = F^2 or E_F = F
+#         ax[1].plot(frq,abs(Y)**2, 'r')
+# =============================================================================
+    return Y
 
 # CALCULATE ENERGY
 
