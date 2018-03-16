@@ -6,28 +6,27 @@ import librosa, librosa.display
 
 def retrieve_audio_data(folder, plot=True):
     files = []
+    x_list = []
+    Xft_list = []
     for _, _, files in os.walk(folder):
         for filename in files[:5]:
             files.append(filename)
     #files = [filename for filename in files[:5] for _, _, files in os.walk(folder)]
     #Load the audio file simple_loop.wav into an array. With amplitude as values
     x, sr = librosa.load(os.path.join(folder, files[1]), sr=None)
-    x_list = []
     for filename in files[:5]:
         x, sr = librosa.load(os.path.join(folder, filename), sr=None) #sr is sampling rate
         x_list.append(x)
         if plot == True:
             plt.figure()
             librosa.display.waveplot(x, sr=sr)
-    x_all = numpy.asarray(x_list)
-    
-    X_list = []
 
-    for x in x_all:
+    for x in x_list:
         #Compute the short-time Fourier transform:
-        X = librosa.stft(x)
-        X_list.append(X)
-    return x_all, sr
+        Xft = librosa.stft(x)
+        Xft_list.append(X)
+    x_all = numpy.asarray(x_list)
+    return x_all, sr, Xft_list
 
 def segment_audio(x_all, sr):
     frame_sz = int(0.100*sr)
@@ -36,7 +35,6 @@ def segment_audio(x_all, sr):
     for x in x_all:
         #Find the times, in seconds, when onsets occur in the audio signal.
         onset_frames = librosa.onset.onset_detect(x, sr=sr)
-        onset_times = librosa.frames_to_time(onset_frames, sr=sr)
         #Convert the onset frames into sample indices.
         onset_samples = librosa.frames_to_samples(onset_frames)
         
@@ -73,7 +71,8 @@ def extract_features(segments_list, sr):
     return concatenated_signal
 
 def preprocess_data(folder, plot=True):
-    x, sr = retrieve_audio_data(folder, plot=False)
+    x, sr, Xft_list = retrieve_audio_data(folder, plot=False)
     segments_list = segment_audio(x, sr)
     concatenated_signal = extract_features(segments_list, sr)
-    return x
+    return concatenated_signal, X_list
+
