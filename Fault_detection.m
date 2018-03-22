@@ -1,5 +1,5 @@
 %% Read audio file (baseline)
-filename = 'C:\Users\Gebruiker\Documents\GitHub\Projectstage\Librosa\Chirping-Birds.wav'
+filename = 'C:\Users\Loes\Documents\GitHub\Projectstage\audiovoorbeelden\heartbeat-sounds\set_a\artifact__201012172012.wav';
 [x,Fs] = audioread(filename); %The input values from audioread() are dimensionless, scaled to -1<=x<1
 %sound(x,Fs) %play audio file
 numChan = size(x,2); %number of channels where data comes from
@@ -18,7 +18,7 @@ duration = length(y)/reFs *1000; %(ms)
 duration_window = 200; %(ms)
 N = length(y); %array has N samples
 numWindows = floor(duration/duration_window); %number of windows you get
-N_perWindow = floor(N/numWindows) %how many samples will each window contains, door naar beneden af te ronden heb je niet precies 200 ms per frame meer
+N_perWindow = floor(N/numWindows); %how many samples will each window contain, door naar beneden af te ronden heb je niet precies 200 ms per frame meer
 
 %Store samples in the corresponding window
 W = zeros(N_perWindow, numWindows); 
@@ -40,22 +40,25 @@ end
 %So W_freq is the result of frequency spectrum extracted from each window
 
 %% Plot in time domain
+hold on
 starttime = 0;
 endingtime = duration/1000;
 %t = 0:dt:(length(y)*dt)-dt;
 t = linspace(starttime,endingtime,length(y)); %time vector
+subplot(2,1,1)
 plot(t,y); xlabel('Seconds'); ylabel('Amplitude'); %Plot laat linker en rechter channel zien (blauw en rood)
-%
-figure
-plot(psd(spectrum.periodogram,y,'Fs',reFs,'NFFT',length(y)));
+title('Time Domain')
+%figure
+%plot(psd(spectrum.periodogram,y,'Fs',reFs,'NFFT',length(y)));
 
 
 %% plot in frequency domain
 Nfft = length(y);
 f = linspace(0,reFs,Nfft);
 G = abs(fft(y(:,1), Nfft)); %the fft of the samples y in Nfft points
+subplot(2,1,2)
 plot(f(1:Nfft/2),G(1:Nfft/2))
-
+title('Frequency Domain')
 
 %% Feature extraction: Root mean square amplitude (time domain) 
 W_squared = W.^2;
@@ -80,7 +83,7 @@ end
 %% Feature extraction: Short time energy (time domain)
 E_se = zeros(1,numWindows);
 for i = 1:numWindows
-    E_se(i) = sum(W(:,i).^2)
+    E_se(i) = sum(W(:,i).^2);
 end
 % so E_se is result of short time energy extracted from each window
 
@@ -101,7 +104,19 @@ end
 % so E_zcr is result of zero crossing rate extracted from each window
 
 %% Feature extraction: Spectral peak (frequency domain)
+syms n
 E_sp = zeros(1,numWindows);
 for i= 1:numWindows
-    E_sp(i) = find(max(W_freq(:,i)));
+    maxval = max(W_freq(:,i));
+    E_sp(i) = find(W_freq(:,i) == maxval);
 end
+
+%% Feature extraction: Spectral centroid (frequency domain)
+
+%% Feature extraction: Spectral kurtosis (frequency domain)
+
+%% Feature extraction: Spectral spread (frequency domain)
+
+%% Feature extraction: Spectral flatness (frequency domain)
+
+%% Feature extraction: Mel frequency cepstral coefficients (frequency domain)

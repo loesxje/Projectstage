@@ -29,7 +29,7 @@ for i in range(len(xft)):
             #print('magnitude = {} \nphase = {}'.format(magnitude, phase))
 
 t2 = time.time()
-print('first part: {} \nsecond part: {} \noverall: {}'.format(t1-t0, t2-t1, t2-t0))
+print('first part: {:.3f}s \nsecond part: {:.3f}s \noverall: {:.3f}s'.format(t1-t0, t2-t1, t2-t0))
 
 
 
