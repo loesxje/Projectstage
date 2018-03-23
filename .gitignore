@@ -101,3 +101,5 @@ ENV/
 .mypy_cache/
 [Werkend] Processing Data with Feature Extraction.ipynb
 Librosa/[Werkend] Processing Data with Feature Extraction-Heart_Beat_sounds.ipynb
+Fault_detection.m
+*.m

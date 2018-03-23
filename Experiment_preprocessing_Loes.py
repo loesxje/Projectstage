@@ -4,18 +4,23 @@ from matplotlib import pyplot as plt
 import numpy as np
 import math
 from numpy.fft import fft
+import os
 #from scipy.fftpack import dct
 
 
-def read_audio_data(path):
-    # Load the data and calculate the time of each sample
-    samplerate, data = wavfile.read(path)    
-    times = np.arange(len(data[:]))/float(samplerate)
-    data = data.astype(float)
-    # Turn audio_data from stereo to mono
-    mono = data.sum(axis = 1) / 2
+def read_audio_data(folder):
+    files = []
+    sr, data, times = [0]*5, [0]*5, [0]*5
+    for _, _, all_files in os.walk(folder):
+        for filename in all_files[:5]:
+            files.append(filename)
+    #files = [filename for filename in all_files for _, _, all_files in os.walk(folder)]
+    for i in range(len(files)):
+        sr[i], data[i] = wavfile.read(os.path.join(folder, files[i]) ) 
+        times[i] = np.arange(len(data[:]))/float(sr[i])
+        data = data[i].astype(float)
     
-    return samplerate, mono, times
+    return sr, data, times
 
 
 def plot_raw_audio_data(time, mono_data):
