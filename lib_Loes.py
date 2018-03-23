@@ -8,12 +8,20 @@ def retrieve_audio_data(folder, plot=True):
     files = []
     x_list = []
     for _, _, files in os.walk(folder):
+<<<<<<< HEAD
         for filename in files[:5]:
+=======
+        for filename in files[:1]:
+>>>>>>> c6584eec9bd07e77299e3e4c991df77818756772
             files.append(filename)
     #files = [filename for filename in files[:5] for _, _, files in os.walk(folder)]
     #Load the audio file simple_loop.wav into an array. With amplitude as values
     x, sr = librosa.load(os.path.join(folder, files[1]), sr=None)
+<<<<<<< HEAD
     for filename in files[:5]:
+=======
+    for filename in files[:1]:
+>>>>>>> c6584eec9bd07e77299e3e4c991df77818756772
         x, sr = librosa.load(os.path.join(folder, filename), sr=None) #sr is sampling rate
         x_list.append(x)
         duration = len(x) / float(sr)

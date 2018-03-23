@@ -1,9 +1,5 @@
 %% Read audio file (baseline)
-<<<<<<< HEAD
-filename = 'C:\Users\Gebruiker\Documents\GitHub\Projectstage\Librosa\Chirping-Birds.wav';
-=======
 filename = 'C:\Users\Loes\Documents\GitHub\Projectstage\audiovoorbeelden\heartbeat-sounds\set_a\artifact__201012172012.wav';
->>>>>>> c6584eec9bd07e77299e3e4c991df77818756772
 [x,Fs] = audioread(filename); %The input values from audioread() are dimensionless, scaled to -1<=x<1
 %sound(x,Fs) %play audio file
 numChan = size(x,2); %number of channels where data comes from
@@ -22,11 +18,7 @@ duration = length(y)/reFs *1000; %(ms)
 duration_window = 200; %(ms)
 N = length(y); %array has N samples
 numWindows = floor(duration/duration_window); %number of windows you get
-<<<<<<< HEAD
-N_perWindow = floor(N/numWindows); %how many samples will each window contains, door naar beneden af te ronden heb je niet precies 200 ms per frame meer
-=======
 N_perWindow = floor(N/numWindows); %how many samples will each window contain, door naar beneden af te ronden heb je niet precies 200 ms per frame meer
->>>>>>> c6584eec9bd07e77299e3e4c991df77818756772
 
 %Store samples in the corresponding window
 W = zeros(N_perWindow, numWindows); 
@@ -44,21 +36,9 @@ W_freq = zeros(N_perWindow, numWindows);
 for j=1:numWindows
     W_freq(:,j) = fft(W(:,j));
 end
-W_freq = abs(W_freq(2:N_perWindow/2+1,:)); %<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<aanpassing>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-%So W_freq is the result of frequency spectrum extracted from each window
 
-%% Calculate frequency bins with FFT <<<<<<<<<<<<<<<<<<<<<<<<< aanpassing
-%Note that the index for the raw FFT are integers from 1?N.
-%We need to process it to convert these integers to frequencies. That is where the sampling frequency counts. 
-N2 = N_perWindow;
-df = reFs/N2;
-sampleIndex = 0:N2/2-1; %raw index for FFT plot
-f = sampleIndex*df; %x-axis index converted to frequencies
-%Now we can plot the absolute value of the FFT against frequencies as
-subplot(3,1,2); stem(sampleIndex,abs(W_freq(:,1))); %sample values on x-axis
-title('X[k]'); xlabel('k'); ylabel('|X(k)|');
-subplot(3,1,3); plot(f,abs(W_freq(:,1))); %x-axis represent frequencies, y-axis the magnitude response from FFT output
-title('X[k]'); xlabel('frequencies (f)'); ylabel('|X(k)|');
+W_freq = abs(W_freq(2:N_perWindow/2+1, :));
+%So W_freq is the result of frequency spectrum extracted from each window
 
 %% Plot in time domain
 hold on
@@ -74,18 +54,12 @@ title('Time Domain')
 
 
 %% plot in frequency domain
-Nfft = length(y)-1;
+Nfft = length(y);
 f = linspace(0,reFs,Nfft);
-<<<<<<< HEAD
-G = abs(fft(y, Nfft)); %the fft of the samples y in Nfft points
-plot(f(1:Nfft/2),G(2:Nfft/2+1))
-
-=======
 G = abs(fft(y(:,1), Nfft)); %the fft of the samples y in Nfft points
 subplot(2,1,2)
 plot(f(1:Nfft/2),G(1:Nfft/2))
 title('Frequency Domain')
->>>>>>> c6584eec9bd07e77299e3e4c991df77818756772
 
 %% Feature extraction: Root mean square amplitude (time domain) 
 W_squared = W.^2;
@@ -134,64 +108,38 @@ end
 syms n
 E_sp = zeros(1,numWindows);
 for i= 1:numWindows
-<<<<<<< HEAD
-    current_window = abs(W_freq(1:N_perWindow/2,i)); %abs taks real parts of transform?!
-    E_sp(i) = find(current_window==max(current_window)) * df; %df =frequency resolution
-end
-
-% so E_sp is result of spectral peak extracted from each window
-%%  Feature extraction: Spectral peak (frequency domain) <<<<<<<<<<<<<<<, controle op juiste implementatie vereist >>>>>>>>>>>>>>>>>>>>
-E_centroid = zeros(1,numWindows);
-for i= 1:numWindows
-    step1 = 0;
-    for j = 1:N_perWindow/2
-        step1 = step1 + (f(j)*W_freq(j,i));
-    end
-    E_centroid(i) = step1 / sum(W_freq(:,i));
-end
- 
-%% Feature extraction: Spectral spread (frequency domain) <<<<<<<<<<<<<<<, controle op juiste implementatie vereist >>>>>>>>>>>>>>>>>>>>
-E_spread = zeros(1,numWindows);
-for i = 1: numWindows
-    step1 = 0;
-    for j = 1:N_perWindow/2
-        step1 = step1 + (j-E_centroid(i))^2 * W_freq(j,i)^2;
-    end
-    E_spread(i) = sqrt( step1 / sum(W_freq(:,i).^2) );
-end
-
-%% Feature extraction: Spectral flatness (frequency domain) 
-E_spread = zeros(1,numWindows);
-for i = 1: numWindows
-    step1 = 0;
-    for j = 1:N_perWindow/2
-        step1 = step1 + log(W_freq(j,i));
-    end
-    step2 = exp(step1/(N_perWindow/2));
-    E_spread(i) = step2 / (sum(W_freq(:,i)) / (N_perWindow/2));
-end
-
-    
-     
-        
-    
-    
-        
-        
-        
-
-=======
-    maxval = max(W_freq(:,i));
-    E_sp(i) = find(W_freq(:,i) == maxval);
+    E_sp(i) = max(max(W_freq(:,i)));
 end
 
 %% Feature extraction: Spectral centroid (frequency domain)
 
 %% Feature extraction: Spectral kurtosis (frequency domain)
 
+% This Feature constantly gives a vector with output -3. Not sure if it is
+% programmed correct.
+% This feature shows how closely the spectra is similar to a Gaussian
+% distribution. If the output is 0, it is similar. If not, it is not
+% similar to a Gaussian distribution e.g. output = -1 menas it's a
+% sinusoïd.
+
+f_max = max(E_sp); % Not sure if this is the correct interpretation of f_max as found in 'Sound based fault detection system', formula 4.12.
+E_sk = zeros(floor(numWindows/2),1);
+for n=1:numWindows
+    mu_x = mean(W_freq(:,n));
+    stdev_x = std(W_freq(:,n));
+    num_sum = 0;
+
+    for i=1:floor(N_perWindow/2)
+        in_sum = (W_freq(i,n) - mu_x)^4;
+        num_sum = num_sum + in_sum;
+    end
+
+    num = 2 * num_sum;
+    den = (f_max * stdev_x)^4;
+    E_sk(n) = num / den - 3;
+end
 %% Feature extraction: Spectral spread (frequency domain)
 
 %% Feature extraction: Spectral flatness (frequency domain)
 
 %% Feature extraction: Mel frequency cepstral coefficients (frequency domain)
->>>>>>> c6584eec9bd07e77299e3e4c991df77818756772
