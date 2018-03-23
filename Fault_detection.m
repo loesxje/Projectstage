@@ -1,5 +1,5 @@
 %% Read audio file (baseline)
-filename = 'C:\Users\Gebruiker\Documents\GitHub\Projectstage\Librosa\Chirping-Birds.wav'
+filename = 'C:\Users\Gebruiker\Documents\GitHub\Projectstage\Librosa\Chirping-Birds.wav';
 [x,Fs] = audioread(filename); %The input values from audioread() are dimensionless, scaled to -1<=x<1
 %sound(x,Fs) %play audio file
 numChan = size(x,2); %number of channels where data comes from
@@ -18,7 +18,7 @@ duration = length(y)/reFs *1000; %(ms)
 duration_window = 200; %(ms)
 N = length(y); %array has N samples
 numWindows = floor(duration/duration_window); %number of windows you get
-N_perWindow = floor(N/numWindows) %how many samples will each window contains, door naar beneden af te ronden heb je niet precies 200 ms per frame meer
+N_perWindow = floor(N/numWindows); %how many samples will each window contains, door naar beneden af te ronden heb je niet precies 200 ms per frame meer
 
 %Store samples in the corresponding window
 W = zeros(N_perWindow, numWindows); 
@@ -36,8 +36,21 @@ W_freq = zeros(N_perWindow, numWindows);
 for j=1:numWindows
     W_freq(:,j) = fft(W(:,j));
 end
-
+W_freq = abs(W_freq(2:N_perWindow/2+1,:)); %<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<aanpassing>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 %So W_freq is the result of frequency spectrum extracted from each window
+
+%% Calculate frequency bins with FFT <<<<<<<<<<<<<<<<<<<<<<<<< aanpassing
+%Note that the index for the raw FFT are integers from 1?N.
+%We need to process it to convert these integers to frequencies. That is where the sampling frequency counts. 
+N2 = N_perWindow;
+df = reFs/N2;
+sampleIndex = 0:N2/2-1; %raw index for FFT plot
+f = sampleIndex*df; %x-axis index converted to frequencies
+%Now we can plot the absolute value of the FFT against frequencies as
+subplot(3,1,2); stem(sampleIndex,abs(W_freq(:,1))); %sample values on x-axis
+title('X[k]'); xlabel('k'); ylabel('|X(k)|');
+subplot(3,1,3); plot(f,abs(W_freq(:,1))); %x-axis represent frequencies, y-axis the magnitude response from FFT output
+title('X[k]'); xlabel('frequencies (f)'); ylabel('|X(k)|');
 
 %% Plot in time domain
 starttime = 0;
@@ -51,10 +64,10 @@ plot(psd(spectrum.periodogram,y,'Fs',reFs,'NFFT',length(y)));
 
 
 %% plot in frequency domain
-Nfft = length(y);
+Nfft = length(y)-1;
 f = linspace(0,reFs,Nfft);
-G = abs(fft(y(:,1), Nfft)); %the fft of the samples y in Nfft points
-plot(f(1:Nfft/2),G(1:Nfft/2))
+G = abs(fft(y, Nfft)); %the fft of the samples y in Nfft points
+plot(f(1:Nfft/2),G(2:Nfft/2+1))
 
 
 %% Feature extraction: Root mean square amplitude (time domain) 
@@ -80,7 +93,7 @@ end
 %% Feature extraction: Short time energy (time domain)
 E_se = zeros(1,numWindows);
 for i = 1:numWindows
-    E_se(i) = sum(W(:,i).^2)
+    E_se(i) = sum(W(:,i).^2);
 end
 % so E_se is result of short time energy extracted from each window
 
@@ -103,5 +116,48 @@ end
 %% Feature extraction: Spectral peak (frequency domain)
 E_sp = zeros(1,numWindows);
 for i= 1:numWindows
-    E_sp(i) = find(max(W_freq(:,i)));
+    current_window = abs(W_freq(1:N_perWindow/2,i)); %abs taks real parts of transform?!
+    E_sp(i) = find(current_window==max(current_window)) * df; %df =frequency resolution
 end
+
+% so E_sp is result of spectral peak extracted from each window
+%%  Feature extraction: Spectral peak (frequency domain) <<<<<<<<<<<<<<<, controle op juiste implementatie vereist >>>>>>>>>>>>>>>>>>>>
+E_centroid = zeros(1,numWindows);
+for i= 1:numWindows
+    step1 = 0;
+    for j = 1:N_perWindow/2
+        step1 = step1 + (f(j)*W_freq(j,i));
+    end
+    E_centroid(i) = step1 / sum(W_freq(:,i));
+end
+ 
+%% Feature extraction: Spectral spread (frequency domain) <<<<<<<<<<<<<<<, controle op juiste implementatie vereist >>>>>>>>>>>>>>>>>>>>
+E_spread = zeros(1,numWindows);
+for i = 1: numWindows
+    step1 = 0;
+    for j = 1:N_perWindow/2
+        step1 = step1 + (j-E_centroid(i))^2 * W_freq(j,i)^2;
+    end
+    E_spread(i) = sqrt( step1 / sum(W_freq(:,i).^2) );
+end
+
+%% Feature extraction: Spectral flatness (frequency domain) 
+E_spread = zeros(1,numWindows);
+for i = 1: numWindows
+    step1 = 0;
+    for j = 1:N_perWindow/2
+        step1 = step1 + log(W_freq(j,i));
+    end
+    step2 = exp(step1/(N_perWindow/2));
+    E_spread(i) = step2 / (sum(W_freq(:,i)) / (N_perWindow/2));
+end
+
+    
+     
+        
+    
+    
+        
+        
+        
+
