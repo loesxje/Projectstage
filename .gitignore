@@ -102,8 +102,7 @@ ENV/
 [Werkend] Processing Data with Feature Extraction.ipynb
 Librosa/[Werkend] Processing Data with Feature Extraction-Heart_Beat_sounds.ipynb
 Fault_detection.m
-*.m
 lib_Loes.py
 Fault_detection.m
 *.py
-*.m
+
