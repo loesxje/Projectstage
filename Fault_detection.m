@@ -59,8 +59,8 @@ endingtime = duration/1000;
 t = linspace(starttime,endingtime,length(y)); %time vector
 plot(t,y); xlabel('Seconds'); ylabel('Amplitude'); %Plot laat linker en rechter channel zien (blauw en rood)
 %
-figure
-plot(psd(spectrum.periodogram,y,'Fs',reFs,'NFFT',length(y)));
+%figure
+%plot(psd(spectrum.periodogram,y,'Fs',reFs,'NFFT',length(y)));
 
 
 %% plot in frequency domain
@@ -142,48 +142,36 @@ for i = 1: numWindows
 end
 
 %% Feature extraction: Spectral flatness (frequency domain) 
-E_spread = zeros(1,numWindows);
+E_flatness = zeros(1,numWindows);
 for i = 1: numWindows
     step1 = 0;
     for j = 1:N_perWindow/2
         step1 = step1 + log(W_freq(j,i));
     end
     step2 = exp(step1/(N_perWindow/2));
-    E_spread(i) = step2 / (sum(W_freq(:,i)) / (N_perWindow/2));
-end
-
-%% Feature extraction: Spectral kurtosis (frequency domain)
-
-% This Feature constantly gives a vector with output -3. Not sure if it is
-% programmed correct.
-% This feature shows how closely the spectra is similar to a Gaussian
-% distribution. If the output is 0, it is similar. If not, it is not
-% similar to a Gaussian distribution e.g. output = -1 menas it's a
-% sinusoïd.
-
-f_max = max(E_sp); % Not sure if this is the correct interpretation of f_max as found in 'Sound based fault detection system', formula 4.12.
-E_sk = zeros(floor(numWindows/2),1);
-for n=1:numWindows
-    mu_x = mean(W_freq(:,n));
-    stdev_x = std(W_freq(:,n));
-    num_sum = 0;
-
-    for i=1:floor(N_perWindow/2)
-        in_sum = (W_freq(i,n) - mu_x)^4;
-        num_sum = num_sum + in_sum;
-    end
-
-    num = 2 * num_sum;
-    den = (f_max * stdev_x)^4;
-    E_sk(n) = num / den - 3;
+    E_flatness(i) = step2 / (sum(W_freq(:,i)) / (N_perWindow/2));
 end
 
     
-     
-        
+%% Reference vector Rescaled, i.e. normalized
+R_spread = mean(E_spread);
+R_flatness = mean(E_flatness);
+R_centroid = mean(E_centroid);
+R_sp = mean(E_sp);
+R_zcr = mean(E_zcr);
+R_se = mean(E_se);
+R_var = mean(E_var);
+R_rms = mean(E_rms);
+Ref_vector  = [R_spread; R_flatness; R_centroid; R_sp; R_zcr; R_se; R_var; R_rms];
+maxRef = max(Ref_vector);
+minRef = min(Ref_vector);
     
-    
-        
+for e = 1:length(Ref_vector)
+    Ref_vector(e) = (Ref_vector(e) - minRef) / (maxRef - minRef);
+end
+
+
+            
         
         
 
