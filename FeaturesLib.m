@@ -5,10 +5,10 @@ function [feat_vals] = FeaturesLib(y, Freq, f)
     %ste = calc_feat_ste(y)
      %-----------------------------------------------------------------------------------------
     %zcr =  calc_feat_zcr(y)
-    peak = calc_feat_peak(Freq)
-    centroid = calc_feat_centroid(Freq, f)
+    peak = calc_feat_peak(Freq);
+    centroid = calc_feat_centroid(Freq, f);
     %spread = calc_feat_spread(Freq, centroid)
-    %flatness = calc_feat_flatness(Freq)
+    flatness = calc_feat_flatness(Freq)
     %kurtosis = calc_feat_kurtosis(Freq, peak)
     feat_vals = [calc_feat_rmsa(y); calc_feat_ampvar(y); calc_feat_ste(y); calc_feat_zcr(y); calc_feat_peak(Freq); calc_feat_centroid(Freq, f); calc_feat_spread(Freq, centroid); calc_feat_flatness(Freq); calc_feat_kurtosis(Freq, peak)];
 end
@@ -66,8 +66,8 @@ end
 function E_flatness = calc_feat_flatness(Freq)
     step1 = 0;
     n_Freq = size(Freq);
-    for i = 1:n_Freq/2
-        step1 = step1 + log(Freq(i));
+    for i = 1:n_Freq(1)/2
+        step1 = step1 + log(abs(Freq(i)));
     end
     step2 = exp(step1 / (n_Freq(1)/2));
     E_flatness = step2 ./ (sum(Freq) ./ (n_Freq(1)/2));

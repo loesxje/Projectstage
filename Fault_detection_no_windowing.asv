@@ -79,10 +79,19 @@ plot(t,y); xlabel('Seconds'); ylabel('Amplitude'); %Plot laat linker en rechter 
 feature_vector = FeaturesLib(y, Freq, f);
 
 %% Reference vector Rescaled, i.e. normalized
-maxRef = max(feature_vector);
-minRef = min(feature_vector);
+R_spread = mean(feature_vector(8,:));
+R_flatness = mean(feature_vector_window(7,:));
+R_centroid = mean(feature_vector_window(5,:));
+R_sp = mean(feature_vector_window(5,:));
+R_zcr = mean(feature_vector_window(4,:));
+R_se = mean(feature_vector_window(3,:));
+R_var = mean(feature_vector_window(2,:));
+R_rms = mean(feature_vector_window(1,:));
+Ref_vector  = [R_spread; R_flatness; R_centroid; R_sp; R_zcr; R_se; R_var; R_rms];
+maxRef = max(Ref_vector);
+minRef = min(Ref_vector);
     
-for e = 1:length(feature_vector)
-    feature_vector(e) = (feature_vector(e) - minRef) / (maxRef - minRef);
+for e = 1:length(Ref_vector)
+    Ref_vector(e) = (Ref_vector(e) - minRef) / (maxRef - minRef);
 end
  
