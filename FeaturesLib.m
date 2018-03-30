@@ -18,11 +18,11 @@ end
     
 function E_ampvar = calc_feat_ampvar(y)
     mu = mean(y);
+    in_sum = zeros(size(y));
     for i = 1:size(y)
-        E_ampvar(i) = sum(y(i) - mu)^2;
+        in_sum(i) = (y(i) - mu)^2;
     end
-    % TEMPORARY
-    %E_ampvar = E_ampvar(1:10);
+    E_ampvar = sum(in_sum);
 end
 
 function E_ste = calc_feat_ste(y)
