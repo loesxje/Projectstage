@@ -1,14 +1,16 @@
 function [feat_vals] = FeaturesLib(y, Freq, f)
-    feat_vals = [calc_feat_rmsa(y), calc_feat_ampvar(y), calc_feat_ste(y), calc_feat_zcr(y), calc_feat_peak(Freq), calc_feat_centroid(Freq, f), calc_feat_spread(Freq, calc_feat_centroid(Freq, f)), calc_feat_flatness(Freq), calc_feat_kurtosis(Freq, calc_feat_peak(Freq))];
-    rmsa = calc_feat_rmsa(y)
-    ampvar = calc_feat_ampvar(y)
-    ste = calc_feat_ste(y)
-    zcr =  calc_feat_zcr(y)
+    %rmsa = calc_feat_rmsa(y)
+    %----------------- LET OP: Veel overeenkomsten met elkaar------------------
+    %ampvar = calc_feat_ampvar(y)
+    %ste = calc_feat_ste(y)
+     %-----------------------------------------------------------------------------------------
+    %zcr =  calc_feat_zcr(y)
     peak = calc_feat_peak(Freq)
     centroid = calc_feat_centroid(Freq, f)
-    spread = calc_feat_spread(Freq, calc_feat_centroid(Freq, f))
-    flatness = calc_feat_flatness(Freq)
-    kurtosis = calc_feat_kurtosis(Freq, calc_feat_peak(Freq))
+    %spread = calc_feat_spread(Freq, centroid)
+    %flatness = calc_feat_flatness(Freq)
+    %kurtosis = calc_feat_kurtosis(Freq, peak)
+    feat_vals = [calc_feat_rmsa(y); calc_feat_ampvar(y); calc_feat_ste(y); calc_feat_zcr(y); calc_feat_peak(Freq); calc_feat_centroid(Freq, f); calc_feat_spread(Freq, centroid); calc_feat_flatness(Freq); calc_feat_kurtosis(Freq, peak)];
 end
 
 function E_rmsa = calc_feat_rmsa(y)
