@@ -1,10 +1,10 @@
+clc
 %% Read audio file (baseline)
-filename = 'C:\Users\Loes\Documents\GitHub\Projectstage\audiovoorbeelden\heartbeat-sounds\set_a\artifact__201105040918.wav';
+filename = 'C:\Users\Loes\Documents\GitHub\Projectstage\audiovoorbeelden\mic_44100_s16le_channel_8_WAV.wav';
 [x,Fs] = audioread(filename); %The input values from audioread() are dimensionless, scaled to -1<=x<1
 %sound(x,Fs) %play audio file
 numChan = size(x,2); %number of channels where data comes from
 x = x(:,1); %just pick one of the channel, assuming there is not much of time difference in signal
-
 %% Resampling
 reFs = 48000; %resampling rate
 [p,q] = rat(reFs/Fs,0.0001); %find integers p and q that yield the correct resampling factor, tolerance of 0.0001 for resampling the signal that is very close to 48kHz
@@ -47,12 +47,13 @@ df = reFs/N2;
 sampleIndex = 0:N2/2-1; %raw index for FFT plot
 f = sampleIndex*df; %x-axis index converted to frequencies
 %Now we can plot the absolute value of the FFT against frequencies as
-subplot(3,1,2); stem(sampleIndex,abs(W_freq(:,1))); %sample values on x-axis
+subplot(3,1,1); stem(sampleIndex,abs(W_freq(:,1))); %sample values on x-axis
 title('X[k]'); xlabel('k'); ylabel('|X(k)|');
-subplot(3,1,3); plot(f,abs(W_freq(:,1))); %x-axis represent frequencies, y-axis the magnitude response from FFT output
+subplot(3,1,2); plot(f,abs(W_freq(:,1))); %x-axis represent frequencies, y-axis the magnitude response from FFT output
 title('X[k]'); xlabel('frequencies (f)'); ylabel('|X(k)|');
 
 %% Plot in time domain
+subplot(3,1,3)
 starttime = 0;
 endingtime = duration/1000;
 %t = 0:dt:(length(y)*dt)-dt;
@@ -64,13 +65,15 @@ plot(t,y); xlabel('Seconds'); ylabel('Amplitude'); %Plot laat linker en rechter 
 
 
 %% plot in frequency domain
-Nfft = length(y)-1;
-f = linspace(0,reFs,Nfft);
-G = abs(fft(y, Nfft)); %the fft of the samples y in Nfft points
-plot(f(1:Nfft/2),G(2:Nfft/2+1))
+% Nfft = length(y)-1;
+% f = linspace(0,reFs,Nfft);
+% G = abs(fft(y, Nfft)); %the fft of the samples y in Nfft points
+% plot(f(1:Nfft/2),G(2:Nfft/2+1))
 
 %% Feature extraction
 feature_vector_window = FeaturesLibWindow(W, numWindows, N_perWindow, W_freq, df, f);
+max(feature_vector_window);
+max(abs(W_freq(:,2)))
     
 %% Reference vector Rescaled, i.e. normalized
 R_spread = mean(feature_vector_window(8,:));
@@ -90,4 +93,4 @@ for e = 1:length(Ref_vector)
 end
 
  %%
- FeaturesLib(y, Freq, f);
+% FeaturesLib(y, Freq, f);

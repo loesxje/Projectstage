@@ -1,9 +1,9 @@
 % Multiple file raw audio file conversion
 
-list = dir ('test_raw_file.raw');
+list = dir ('mic_44100_s16le_channel_8.raw');
 
 endianness='l';
-fs=16000;
+fs=44100;
 datatype='int16';
 for i = 1 : length(list)
     filename=list(i).name;

@@ -1,11 +1,11 @@
-function[feat_vals_window] = FeaturesLibWindow(W, nWind, NpWind, wFreq, df, f)
+function[peak] = FeaturesLibWindow(W, nWind, NpWind, wFreq, df, f)
     %rmsa = calc_rmsa(W, nWind)
      %----------------- LET OP: Veel overeenkomsten met elkaar------------------
     %ampvar = calc_ampvar(W, nWind, NpWind)
     %ste = calc_ste(W, nWind)      
     %-----------------------------------------------------------------------------------------
     %zcr =  calc_zcr(W, nWind, NpWind)
-    %peak = calc_peak(wFreq, nWind, NpWind, df)
+    peak = calc_peak(wFreq, nWind, NpWind, df);
     centroid = calc_centroid(wFreq, nWind, NpWind, f);
     %spread = calc_spread(wFreq, nWind, NpWind, centroid)
     %flatness = calc_flatness(wFreq, nWind, NpWind)
