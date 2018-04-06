@@ -1,0 +1,9 @@
+mic_44100_s16le_channel_0.raw
+mic_44100_s16le_channel_1.raw
+mic_44100_s16le_channel_2.raw
+mic_44100_s16le_channel_3.raw
+mic_44100_s16le_channel_4.raw
+mic_44100_s16le_channel_5.raw
+mic_44100_s16le_channel_6.raw
+mic_44100_s16le_channel_7.raw
+mic_44100_s16le_channel_8.raw

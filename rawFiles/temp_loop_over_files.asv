@@ -1,0 +1,45 @@
+clear, close, clc
+
+workingdir = 'C:\Users\Gebruiker\Documents\GitHub\Projectstage\';
+basefolderlogs = strcat(workingdir,'Convert .raw to .wav\');
+target_folder = strcat(workingdir,'Converted2Wav\');
+considerlogs = textread(strcat(workingdir,'Convert .raw to .wav\filenames.txt'), '%s');
+mkdir(target_folder)
+
+endianness='l';
+fs=44100;
+datatype='int16';
+
+for i = 1:numel(considerlogs)
+    selected_log = strcat(basefolderlogs,considerlogs{i});
+    fprintf('selected recording log: %s \n', selected_log)
+    
+    fid_R = fopen(selected_log,'r',endianness);
+    data = fread(fid_R,'int16'); % Raw data of input audio file. 
+    fclose(fid_R); 
+% %     o=audioplayer(data,16000);
+% %     play(o)
+    data=int16(data);
+    s1=selected_log;
+    s2=s1(1:end-4);
+    write_name=strcat(s2,'_WAV.wav'); % need to change for every file
+    fullFileName = fullfile(target_folder, write_name);
+    audiowrite(fullFileName,data,fs,'BitsPerSample',16); % outputfile is normalized in apmlitude
+%     
+%     fullFileName = fullfile(target_folder, write_name);
+%         imwrite(cuttingdata, fullFileName)
+  
+end
+
+
+
+    
+    
+    
+    
+% path = 'C:\Users\Gebruiker\Documents\GitHub\Projectstage\Convert .raw to .wav\';
+% k = 7;
+% for i = 0:k
+%     variable = sprintf('mic_44100_s16le_channel_%d_WAV.wav',i)
+%     [x,Fs] = audioread(strcat(path,variable));
+% end
