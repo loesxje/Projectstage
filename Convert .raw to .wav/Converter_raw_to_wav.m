@@ -2,9 +2,9 @@
 clear, close, clc
 path = 'C:\Users\Loes\Documents\GitHub\Projectstage\Convert .raw to .wav\';
 k = 7;
+
 for i = 0:k
-    list(i) = sprintf('mic_44100_s16le_channel_%d_.raw',i)
-    [x,Fs] = audioread(strcat(path,variable));
+    list(i) = dir(sprintf('mic_44100_s16le_channel_%d.raw',i))
 end
 
 
