@@ -1,4 +1,4 @@
-function[peak] = FeaturesLibWindow(W, nWind, NpWind, wFreq, df, f)
+function[feat_vals_window] = FeaturesLibWindow(W, nWind, NpWind, wFreq, df, f)
     %rmsa = calc_rmsa(W, nWind)
      %----------------- LET OP: Veel overeenkomsten met elkaar------------------
     %ampvar = calc_ampvar(W, nWind, NpWind)

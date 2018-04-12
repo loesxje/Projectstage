@@ -72,8 +72,6 @@ plot(t,y); xlabel('Seconds'); ylabel('Amplitude'); %Plot laat linker en rechter 
 
 %% Feature extraction
 feature_vector_window = FeaturesLibWindow(W, numWindows, N_perWindow, W_freq, df, f);
-max(feature_vector_window);
-max(abs(W_freq(:,2)))
     
 %% Reference vector Rescaled, i.e. normalized
 R_spread = mean(feature_vector_window(8,:));
@@ -92,5 +90,4 @@ for e = 1:length(Ref_vector)
     Ref_vector(e) = (Ref_vector(e) - minRef) / (maxRef - minRef);
 end
 
- %%
-% FeaturesLib(y, Freq, f);
+
