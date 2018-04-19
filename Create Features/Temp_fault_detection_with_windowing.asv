@@ -93,6 +93,5 @@ end
 
 %%
 clc
-duration_window = 200;
-W_freq = PreProcessingLibWindow(x, Fs, reFs, duration_window);
-feature_vector_window = FeaturesLibWindow(W, numWindows, N_perWindow, W_freq, df, f);
+e
+test = PreProcessingLibWindow(x, Fs, reFs, duration_window)
