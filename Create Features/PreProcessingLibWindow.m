@@ -1,7 +1,8 @@
-function[W_freq] = PreProcessingLibWindow(x, Fs, reFs, duration_window)
+function[W, W_freq, numWindows, N_perWindow, df, f] = PreProcessingLibWindow(x, Fs, reFs, duration_window)
 y = Resampling(reFs,Fs, x);    
 [W, numWindows, N_perWindow] = Windowing(y, reFs, duration_window);
 W_freq = FFT(W, numWindows, N_perWindow);
+[df, f] = Index_to_Frequencies(reFs, N_perWindow);
 end
 
 
@@ -40,3 +41,8 @@ function[W_freq] = FFT(W, numWindows, N_perWindow)
     %So W_freq is the result of frequency spectrum extracted from each window
 end
 
+    function[df, f] = Index_to_Frequencies(reFs, N_perWindow)
+    df = reFs/N_perWindow;
+    sampleIndex = 0:N_perWindow/2-1; %raw index for FFT plot
+    f = sampleIndex*df; %x-axis index converted to frequencies
+end

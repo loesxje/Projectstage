@@ -70,7 +70,14 @@ plot(t,y); xlabel('Seconds'); ylabel('Amplitude'); %Plot laat linker en rechter 
 % G = abs(fft(y, Nfft)); %the fft of the samples y in Nfft points
 % plot(f(1:Nfft/2),G(2:Nfft/2+1))
 
-%% Feature extraction
+%% ALL IN ONE
+clear, close, clc
+
+reFs = 48000;
+duration_window = 200;
+
+[x, Fs] = ReadSignal('C:\Users\Loes\Documents\GitHub\Projectstage\audiovoorbeelden\', 'mic_44100_s16le_channel_8_WAV.wav');
+[W, W_freq, numWindows, N_perWindow, df, f] = PreProcessingLibWindow(x, Fs, reFs, duration_window);
 feature_vector_window = FeaturesLibWindow(W, numWindows, N_perWindow, W_freq, df, f);
     
 %% Reference vector Rescaled, i.e. normalized
@@ -91,8 +98,3 @@ for e = 1:length(Ref_vector)
 end
 
 
-%%
-clc
-duration_window = 200;
-W_freq = PreProcessingLibWindow(x, Fs, reFs, duration_window);
-feature_vector_window = FeaturesLibWindow(W, numWindows, N_perWindow, W_freq, df, f);
