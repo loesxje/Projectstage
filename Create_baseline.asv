@@ -20,18 +20,28 @@ end
 %% make baseline
 % bepaal mu en sigma per feature om zo een range (baseline) te
 % determineren
-clc
 
+mu_sigma = {};
 baseline = {};
 
 for i = 1:numel(feat_vec_total)
     feat_vec = feat_vec_total{i};
+    range = zeros(2,8);
     for j = 1:8
-        
-        mu = mean(feat_vec(j,:));
-        stdev = std(feat_vec(j,:));
-        range(1,j) = mu;
-        range(2,j) = stdev;
-        baseline{i} = range
+        range(1,j) = mean(feat_vec(j,:)); % mu (mean)
+        range(2,j) = std(feat_vec(j,:)); % sigma (standarddeviation)
+        mu_sigma{i} = range;
     end
+end
+
+for i = 1:numel(feat_vec_total)
+    mu_sigma{i}; % is van microfoon i de baseline voor alle features
+    for j = 1:numel(mu_sigma)
+        mu = mu_sigma{i}(1,j); % is mu van microfoon i van j-de feature
+        sigma = mu_sigma{i}(2,j); % is sigma van microfoon i van j-de feature
+        alpha = 1;
+        lower_bound = mu - alpha * sigma; % is lower bound of the anomaly range
+        upper_bound = mu + alpha * sigma; % is upper bound of the anomaly range
+    end
+    baseline{i} = [lower_bound; upper_bound];
 end
