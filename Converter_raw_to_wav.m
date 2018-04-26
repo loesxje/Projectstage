@@ -1,6 +1,6 @@
 clear, close, clc
 
-workingdir = 'C:\Users\Gebruiker\Documents\GitHub\Projectstage\';
+workingdir = 'C:\Users\Loes\Documents\GitHub\Projectstage\';
 basefolderlogs = strcat(workingdir,'rawFiles\');
 target_folder = strcat(workingdir,'wavFiles\');
 considerlogs = textread(strcat(workingdir,'rawFiles\filenames.txt'), '%s');

@@ -37,7 +37,7 @@ duration_window = 200;
 
 [x, Fs] = ReadSignal('C:\Users\Loes\Documents\GitHub\Projectstage\audiovoorbeelden\', 'mic_44100_s16le_channel_8_WAV.wav');
 [W, W_freq, numWindows, N_perWindow, df, f] = PreProcessingLibWindow(x, Fs, reFs, duration_window);
-feature_vector_window = FeaturesLibWindow(W, numWindows, N_perWindow, W_freq, df, f);
+feature_vector_window = FeaturesLibWindow(W, numWindows, N_perWindow, W_freq, df, f)
     
 %% Reference vector Rescaled, i.e. normalized
 R_spread = mean(feature_vector_window(8,:));
