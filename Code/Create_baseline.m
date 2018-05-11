@@ -1,16 +1,15 @@
 clear, close, clc
-addpath('C:\Users\Loes\Documents\GitHub\Projectstage\Create Features')
 
-reFs = 48000;
-duration_window = 200;
+reFs = 48000; %resampling rate in Hz
+duration_window = 200; %in milliseconds
 
 tic 
 
-% Let op. De baseline wordt nu opgesteld aan de hand van de afwijkingsdata Doordat dit voor nu even sneller werkt.
-path = 'C:\Users\Loes\Documents\GitHub\Projectstage\wavFiles\Dataset 2\Afwijking_boor\'; 
+% Let op: De baseline wordt nu opgesteld aan de hand van de afwijkingsdata doordat dit voor nu even sneller werkt.
+path = 'C:\Users\Gebruiker\Documents\GitHub\Projectstage\wavFiles\Dataset 1\afwijking_boor\'; 
 filename_part_1 =  'mic_44100_s16le_channel_';
 filename_part_2 = '_WAV.wav';
-[baseline_cellarray, feat_vec_total] = BaselineLib(reFs, duration_window, path, filename_part_1, filename_part_2);
+[baseline, feat_vec_total] = BaselineLib(reFs, duration_window, path, filename_part_1, filename_part_2);
 
 toc
 

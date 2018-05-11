@@ -38,16 +38,17 @@ end
 function[baseline] = calc_baseline(mu_sigma, feat_vec_total)
     for i = 1:numel(feat_vec_total)
         mu_sigma{i}; % is van microfoon i de baseline voor alle features
-        lower_upper_feat = zeros(8,2);
+        lower_upper_mic = zeros(8,2);
         for j = 1:numel(mu_sigma)
             mu = mu_sigma{i}(1,j); % is mu van microfoon i van j-de feature
             sigma = mu_sigma{i}(2,j); % is sigma van microfoon i van j-de feature
             alpha = 1; %moet later statistisch bepaald worden
             lower_bound = mu - alpha * sigma; % is lower bound of the anomaly range
             upper_bound = mu + alpha * sigma; % is upper bound of the anomaly range
-            lower_upper_feat(j,:) =  [lower_bound; upper_bound] %lower and upper bound per feature
+             
+            lower_upper_mic(j,:) =  [lower_bound; upper_bound]
         end
-        baseline{i} = lower_upper_feat; % bounds with the different microfones as columns and the different features as rows
+        baseline{i} = lower_upper_mic; % bounds with the different microfones as columns and the different features as rows
     end
 end
 
