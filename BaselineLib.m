@@ -1,7 +1,8 @@
-function[baseline] = BaselineLib(reFs, duration_window, path, filename_part_1, filename_part_2)
+function[baseline, feat_vec_total] = BaselineLib(reFs, duration_window, path, filename_part_1, filename_part_2)
     feat_vec_total = create_total_feat_vec(reFs, duration_window, path, filename_part_1, filename_part_2);
     mu_sigma = calc_mu_sigma(feat_vec_total);
     baseline = calc_baseline(mu_sigma, feat_vec_total);
+%     subset_mu_sigma = calc_subset_mu_sigma(feat_vec_total);
 end
 
 function[feat_vec_total] = create_total_feat_vec(reFs, duration_window, path, filename_part_1, filename_part_2)
@@ -16,11 +17,12 @@ function[feat_vec_total] = create_total_feat_vec(reFs, duration_window, path, fi
         feature_vector_window = FeaturesLibWindow(W, numWindows, N_perWindow, W_freq, df, f);
 
         ind = i+1;
-        feat_vec_total{ind} = feature_vector_window; % feat_vec_total{1, nr .wav}
+        feat_vec_total{ind} = feature_vector_window; % feat_vec_total{nr.feat, nr .wav}
     end
 end
 
 function[mu_sigma] = calc_mu_sigma(feat_vec_total)
+    % Calculating the mu and sigma over the whole signal
     mu_sigma = {};
 
     for i = 1:numel(feat_vec_total)
@@ -48,4 +50,28 @@ function[baseline] = calc_baseline(mu_sigma, feat_vec_total)
     end
 end
 
-%baseline = {};
+% function[subset_mu_sigma] = calc_subset_mu_sigma(feat_vec_total)
+%     part_mu_sigma = {};
+%     subset_mu_sigma = {};
+%     t = 0;
+%     
+%     for i = 1:numel(feat_vec_total)
+%         feat_vec = feat_vec_total{i};
+%         for k = 1:numel(feat_vec{i}(;,1))
+%             
+%             
+%             range = zeros(2,8);
+%             for j = 1:8
+%                 range(1,j) = mean(feat_vec(j,:)); % mu (mean)
+%                 range(2,j) = std(feat_vec(j,:)); % sigma (standarddeviation)
+%                 part_mu_sigma{i} = range;
+%             end
+%             t = t + 1;
+%             if t == 5
+%                 subset_mu_sigma{i} = part_mu_sigma;
+%                 t = 0;
+%             end
+%             part_mu_sigma = {};
+%         end
+%     end
+% end
