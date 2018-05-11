@@ -23,21 +23,26 @@ clc
     t1 = 0;
     t2 = 0;
     
-    for i = 1:numel(feat_vec_total) % over alle microfoons loopen
+    for i = 1:1%numel(feat_vec_total) % over alle microfoons loopen
         feat_vec = feat_vec_total{i}; 
-        subset_feat_vec = zeros(1,subset); %numel(feat_vec_total), subset);
-        for j = 1:numel(feat_vec(1,:))
+        subset_feat_vec = zeros(numel(feat_vec_total), subset);
+        for j = 1:subset%numel(feat_vec(1,:)) % over 1 subset loopen
             one_feat = feat_vec(1,j);
             subset_feat_vec(1,j) = one_feat;
-            t = t + 1;
-            if t == subset
-                range = zeros(2,size(subset_feat_vec,1)
-                for k = 1:numel(feat_vec_total{i})
-                    range(1,k) = mean(subset_feat_vec(k,:))
+            t1 = t1 + 1;
+            if t1 == subset
+                range = zeros(2,size(subset_feat_vec,1));
+                for k = 1:1%numel(feat_vec_total{i}) % over alle subsets loopen
+                    range(1,k) = mean(subset_feat_vec(k,:));
+                    range(2,k) = std(subset_feat_vec(k,:));
+                    part_mu_sigma{i} = range
                 end
             end
-            % sizes goed krijgen. Daarna mu en sigma berekenen voor één
-            % subset. Daarna voor meerdere subsets. Dan voor alle features.
+            % sizes goed krijgen. 
+            %Daarna mu en sigma berekenen voor één
+            % subset. 
+            %Daarna voor meerdere subsets.
+            %Dan voor alle features.
             % En tot slot voor alle mics.
             
 %             range = zeros(2,8);
@@ -54,3 +59,17 @@ clc
             part_mu_sigma = {};
         end
     end
+    
+%%
+
+for mic = 1:size(feat_vec_total,2)
+    feat_vec = feat_vec_total{mic};
+    n_feat = size(feat_vec,1)
+    subset_feat_vec = zeros(n_feat, subset);
+    for feat = 1:n_feat
+        one_feat = feat_vec(feat,:)
+        for i = 1:size(one_feat,2)
+            subset_feat_vec(feat) = one_feat(i)
+        end
+    end
+end
