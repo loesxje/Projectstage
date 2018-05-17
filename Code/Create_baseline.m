@@ -2,14 +2,15 @@ clear, close, clc
 
 reFs = 48000; %resampling rate in Hz
 duration_window = 200; %in milliseconds
+alpha = 1.5;
 
 tic 
 
 % Let op: De baseline wordt nu opgesteld aan de hand van de afwijkingsdata doordat dit voor nu even sneller werkt.
-path = 'C:\Users\Gebruiker\Documents\GitHub\Projectstage\wavFiles\Dataset 1\afwijking_boor\'; 
+path = 'C:\Users\Loes\Documents\GitHub\Projectstage\wavFiles\Dataset 1\Normal\'; 
 filename_part_1 =  'mic_44100_s16le_channel_';
 filename_part_2 = '_WAV.wav';
-[baseline, feat_vec_total] = BaselineLib(reFs, duration_window, path, filename_part_1, filename_part_2);
+[baseline, feat_vec_total] = BaselineLib(reFs, duration_window, path, filename_part_1, filename_part_2, alpha);
 
 toc
 
