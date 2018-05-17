@@ -50,29 +50,3 @@ function[baseline] = calc_baseline(mu_sigma, feat_vec_total)
         baseline{i} = lower_upper_feat; % bounds with the different microfones as columns and the different features as rows
     end
 end
-
-% function[subset_mu_sigma] = calc_subset_mu_sigma(feat_vec_total)
-%     part_mu_sigma = {};
-%     subset_mu_sigma = {};
-%     t = 0;
-%     
-%     for i = 1:numel(feat_vec_total)
-%         feat_vec = feat_vec_total{i};
-%         for k = 1:numel(feat_vec{i}(;,1))
-%             
-%             
-%             range = zeros(2,8);
-%             for j = 1:8
-%                 range(1,j) = mean(feat_vec(j,:)); % mu (mean)
-%                 range(2,j) = std(feat_vec(j,:)); % sigma (standarddeviation)
-%                 part_mu_sigma{i} = range;
-%             end
-%             t = t + 1;
-%             if t == 5
-%                 subset_mu_sigma{i} = part_mu_sigma;
-%                 t = 0;
-%             end
-%             part_mu_sigma = {};
-%         end
-%     end
-% end
