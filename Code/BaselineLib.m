@@ -1,7 +1,7 @@
-function[baseline, feat_vec_total] = BaselineLib(reFs, duration_window, path, filename_part_1, filename_part_2)
+function[baseline, feat_vec_total] = BaselineLib(reFs, duration_window, path, filename_part_1, filename_part_2, alpha)
     feat_vec_total = create_total_feat_vec(reFs, duration_window, path, filename_part_1, filename_part_2);
     mu_sigma = calc_mu_sigma(feat_vec_total);
-    baseline = calc_baseline(mu_sigma, feat_vec_total);
+    baseline = calc_baseline(mu_sigma, feat_vec_total, alpha);
 %   subset_mu_sigma = calc_subset_mu_sigma(feat_vec_total);
 end
 
@@ -35,14 +35,13 @@ function[mu_sigma] = calc_mu_sigma(feat_vec_total)
     end
 end
 
-function[baseline] = calc_baseline(mu_sigma, feat_vec_total)
+function[baseline] = calc_baseline(mu_sigma, feat_vec_total, alpha)
     for i = 1:numel(feat_vec_total)
         mu_sigma{i}; % is van microfoon i de baseline voor alle features
         lower_upper_feat = zeros(8,2);
         for j = 1:numel(mu_sigma)
             mu = mu_sigma{i}(1,j); % is mu van microfoon i van j-de feature
             sigma = mu_sigma{i}(2,j); % is sigma van microfoon i van j-de feature
-            alpha = 1; %moet later statistisch bepaald worden
             lower_bound = mu - alpha * sigma; % is lower bound of the anomaly range
             upper_bound = mu + alpha * sigma; % is upper bound of the anomaly range
             lower_upper_feat(j,:) =  [lower_bound; upper_bound] %lower and upper bound per feature
