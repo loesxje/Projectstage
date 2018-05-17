@@ -23,18 +23,25 @@ clc
 for mic = 1:1%size(feat_vec_total,2) % over alle microfoons loopen
     feat_vec = feat_vec_total{mic};
     n_feat = size(feat_vec,1);
-    for feat = 1:1%:n_feat                        % over alle features loopen
-        one_feat = feat_vec(feat,:);
-        n_windows = size(one_feat,2);
-        for i = 1:subset:(n_windows - subset) % over alle featurevalues loopen
-            subset_feat_vec = zeros(1, subset);
-            for subset_i = 1:subset             % over de index in de subset loopen
-                subset_feat_vec(subset_i) = one_feat(i + subset_i - 1);
-            end
-            subset_mu_sigma = {};
-            mu = mean(subset_feat_vec);
-            sigma = std(subset_feat_vec);
-            subset_mu_sigma{feat, n_windows} = [mu; sigma]
+        % over alle features loopen
+        %one_feat = feat_vec(feat,:);
+    n_windows = size(feat_vec,2);
+    subset_feat_vec = {};%zeros(1, subset);
+    n = 1;
+    per_subset_feat = {};
+    for i = 1:subset:(n_windows - subset) % neemt steeds subset van 5
+        subset_feat_vec{n} = feat_vec(:,i:i+subset-1); % je hebt n sets, waarin rijen features zijn en kolommen bevatten steeds 5 windows
+        n = n + 1; % uiteindelijk heb je n sets 
+    end
+    for j = 1:size(subset_feat_vec,2)
+        per_subset = subset_feat_vec{j};
+        per_subset_per_feat_mu_sigma = {};
+        for k = 1:n_feat
+            per_subset_per_feat = per_subset(k,:);
+            mu = mean(per_subset_per_feat);
+            sigma = std(per_subset_per_feat);
+            per_subset_per_feat_mu_sigma{k} = [mu sigma];
         end
+        per_subset_feat{j} = per_subset_per_feat_mu_sigma;
     end
 end
