@@ -9,7 +9,7 @@ function[feat_vals_window] = FeaturesLibWindow(W, nWind, NpWind, wFreq, df, f)
     centroid = calc_centroid(wFreq, nWind, NpWind, f);
     %spread = calc_spread(wFreq, nWind, NpWind, centroid)
     %flatness = calc_flatness(wFreq, nWind, NpWind)
-    %     kurtosis = calc_kurtosis()
+    %kurtosis = calc_kurtosis()
     feat_vals_window = [calc_rmsa(W, nWind); calc_ampvar(W, nWind, NpWind); calc_ste(W, nWind); calc_zcr(W, nWind, NpWind); calc_peak(wFreq, nWind, NpWind, df); calc_centroid(wFreq, nWind, NpWind, f); calc_spread(wFreq, nWind, NpWind, centroid); calc_flatness(wFreq, nWind, NpWind)];
 end
 

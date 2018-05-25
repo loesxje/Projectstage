@@ -15,7 +15,6 @@ toc
 
 %%
 clc
-
     subset = 5; % size of the subset, dus ongeveer 10 sec.
     part_mu_sigma = {};
     subset_mu_sigma = {};

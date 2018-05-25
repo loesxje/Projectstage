@@ -7,7 +7,7 @@ end
 
 
 function[y] = Resampling(reFs, Fs, x)
-    reFs = 48000; %resampling rate
+    %reFs = 48000; %resampling rate ->>kan weg vgm
     [p,q] = rat(reFs/Fs,0.0001); %find integers p and q that yield the correct resampling factor, tolerance of 0.0001 for resampling the signal that is very close to 48kHz
     check = p/q*Fs; %check if the desired sample rate is obtained
     y = resample(x,p,q); %y is array of resampled signal
@@ -18,7 +18,7 @@ function[W, numWindows, N_perWindow] = Windowing(y, reFs, duration_window)
     duration = length(y)/reFs *1000; %(ms)
     N = length(y); %array has N samples
     numWindows = floor(duration/duration_window); %number of windows you get
-    N_perWindow = floor(N/numWindows); %how many samples will each window contains, door naar beneden af te ronden heb je niet precies 200 ms per frame meer
+    N_perWindow = floor(N/numWindows); %how many samples will each window contains
 
     %Store samples in the corresponding window
     W = zeros(N_perWindow, numWindows); 
@@ -41,7 +41,7 @@ function[W_freq] = FFT(W, numWindows, N_perWindow)
     %So W_freq is the result of frequency spectrum extracted from each window
 end
 
-    function[df, f] = Index_to_Frequencies(reFs, N_perWindow)
+function[df, f] = Index_to_Frequencies(reFs, N_perWindow)
     df = reFs/N_perWindow;
     sampleIndex = 0:N_perWindow/2-1; %raw index for FFT plot
     f = sampleIndex*df; %x-axis index converted to frequencies
