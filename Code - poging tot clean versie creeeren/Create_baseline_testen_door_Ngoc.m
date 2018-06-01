@@ -22,7 +22,7 @@ clc
 for mic = 1:1%size(feat_vec_total,2) % over alle microfoons loopen
     feat_vec = feat_vec_total{mic};
     n_feat = size(feat_vec,1);
-        % over alle features loopen
+        %over alle features loopen
         %one_feat = feat_vec(feat,:);
     n_windows = size(feat_vec,2);
     subset_feat_vec = {};%zeros(1, subset);
@@ -64,6 +64,38 @@ path = 'C:\Users\Gebruiker\Documents\GitHub\Projectstage\wavFiles\Dataset 1\afwi
 filename_part_1 =  'mic_44100_s16le_channel_';
 filename_part_2 = '_WAV.wav';
 [baseline, feat_vec_total] = BaselineLib(reFs, duration_window, path, filename_part_1, filename_part_2);
+
+% Dezelfde stap uitvoeren als hierboven: dus testset splitsen naar subsets
+% van ... secondes
+    subset = 5; % size of the subset, dus ongeveer 10 sec.
+    part_mu_sigma = {};
+    subset_mu_sigma = {};
+
+for mic = 1:1%size(feat_vec_total,2) % over alle microfoons loopen
+    feat_vec = feat_vec_total{mic};
+    n_feat = size(feat_vec,1);
+        %over alle features loopen
+        %one_feat = feat_vec(feat,:);
+    n_windows = size(feat_vec,2);
+    subset_feat_vec = {};%zeros(1, subset);
+    n = 1;
+    per_subset_feat =[];
+    for i = 1:subset:(n_windows - subset) % neemt steeds subset van 5
+        subset_feat_vec{n} = feat_vec(:,i:i+subset-1); % je hebt n sets, waarin rijen features zijn en kolommen bevatten steeds 5 windows
+        n = n + 1; % uiteindelijk heb je n sets 
+    end
+    for j = 1:size(subset_feat_vec,2)
+        per_subset = subset_feat_vec{j};
+        per_subset_per_feat_mu = zeros(8,1);
+        for k = 1:n_feat
+            per_subset_per_feat = per_subset(k,:);
+            mu = mean(per_subset_per_feat);
+            %sigma = std(per_subset_per_feat);
+            per_subset_per_feat_mu(k) = mu;
+        end
+        per_subset_feat = [per_subset_feat per_subset_per_feat_mu];
+    end
+end
 
 %%
 afwijking_feat_mu = zeros(n_feat,1);
