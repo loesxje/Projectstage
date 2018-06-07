@@ -1,7 +1,7 @@
 %% Anomaly detection
 % Read audio data file (same as baseline script but other path and file)
 clc
-path = 'C:\Users\Gebruiker\Documents\GitHub\Projectstage\wavFiles\Dataset 1\Normal\'; 
+path = 'C:\Users\Gebruiker\Documents\GitHub\Projectstage\wavFiles\Dataset 1\normaal\'; 
 filename = 'mic_44100_s16le_channel_0_TEST.wav';
 [x, Fs] = ReadSignal(path, filename);
 %% Resampling (exact the same as baseline script)
@@ -41,7 +41,7 @@ for s=1:numSamples %for each input signal
     multi_feature_vectors = [multi_feature_vectors feature_vector_signal];
 end
 
-%% Compare feature vector with the baseline
+%% Compare feature vector with the baseline (vervalt)
 format long
 comparison = zeros(size(multi_feature_vectors));
 
@@ -53,4 +53,10 @@ for s = 1:numSamples
 end
 comparison       
         
-    
+%% Compare THE MEAN of the feature vectors with the baseline 
+comparison = zeros(size(numFeatures,1));
+    for f = 1:numFeatures
+        gem = mean(multi_feature_vectors(f,:));
+        comparison(f) = gem<baseline(f,1) | gem>baseline(f,2);
+    end
+comparison

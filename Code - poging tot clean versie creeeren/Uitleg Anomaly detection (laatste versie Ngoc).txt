@@ -1,0 +1,34 @@
+welke stappen & bijbehorende scripts zijn nodig voor anomaly detection?
+In het script Semi-stationair.m wordt het volgende gedaan:
+
+- inlezen van normaal geluid (geen aparte functiescript nodig)
+- resampling van geluid naar 48000 Hz (deze stap is niet nodig als bij het opnemen 
+van data de sampling rate al op 48000 Hz zit (geen aparte functiescript nodig)
+- Het normaal geluid wordt 10 minuten opgenomen, deze lengte wordt gesplitst naar 10 seconden samples om te trainen.
+(functiescript: windowing)
+- Daarna komt een for loop (functiescript: nog geen maar dit kan in een aparte script gezet worden zodat gebruiker dit niet ziet).
+De stappen voor elke sample zijn:
+	- Window de sample in windows van 200 ms (Windowing)
+	- transform elke window naar fft (FFT)
+	- vertaal index naar frequencies (Index_to_Frequencies)
+	- doe feature extraction voor elke window (FeaturesLibWindow)
+	- bereken het gemiddelde over deze windows om een representatieve feature vector te verkrijgen voor het sample
+	- de output is 'multi_feature_vectors' waarin kolommen de samples (10s) voorstellen en de rijen features
+	De waarden zijn het gemiddelde waarden van de features
+- Daarna wordt er een betrouwbaarheidsinterval berekend voor de features
+- De betrouwbaarheidsintervallen leveren baseline op voor het normaal geluid. Dit wordt opgeslagen in een tx.file die later terug bekeken kan worden.
+
+	
+moeten deze samples geanalyseerd worden, daarvoor ga je het sample windowen in windows van 200 ms.
+(functiescript: nog geen, maar dit is een for loop omdat het voor elke sample gedaan moet worden. Dit kan in een functiescript apart worden gezet)
+- Dan doe de feature extraction voor elke window. 
+
+
+De volgende script is: Anomaly_detection.m. Wat dit script doet is:
+- inlezen van test geluid (afwijkend of testset van normaal geluid).
+- Resampling op 48000 Hz (zelfde als boven)
+- Het geluid wordt gesplitst in 10 seconden samples (zelfde als boven)
+- Daarna wordt elke sample weer gewindowd en feature extr. etc. Output is ook weer een 'multi_feature_vectors' (zelfde als boven)
+- Daarna wordt er een gemiddelde genomen van deze multi_feature_vector om één feat. vec te verkrijgen voor het geluid van 1 minuut
+- Dan wordt deze gemiddelde vergeleken met de baseline. De output is dat elke feature aangeeft of het geluid buiten de range ligt of niet.
+

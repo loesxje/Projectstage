@@ -60,7 +60,7 @@ baseline_feat_mu_sigma = [feat_mu feat_sigma];
 baseline_lower_upper = [baseline_feat_mu_sigma(:,1)-baseline_feat_mu_sigma(:,2) baseline_feat_mu_sigma(:,1)+baseline_feat_mu_sigma(:,2)]
 %% afwijking inlezen
 
-path = 'C:\Users\Gebruiker\Documents\GitHub\Projectstage\wavFiles\Dataset 1\afwijking_praten\'; 
+path = 'C:\Users\Gebruiker\Documents\GitHub\Projectstage\wavFiles\Dataset 1\afwijking_boor\'; 
 filename_part_1 =  'mic_44100_s16le_channel_';
 filename_part_2 = '_WAV.wav';
 [baseline, feat_vec_total] = BaselineLib(reFs, duration_window, path, filename_part_1, filename_part_2);

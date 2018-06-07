@@ -1,7 +1,7 @@
 %% Read audio data file
 clear, clc
-path = 'C:\Users\Gebruiker\Documents\GitHub\Projectstage\wavFiles\Dataset 1\Normal\'; 
-filename = 'mic_44100_s16le_channel_0_TEST.wav';
+path = 'C:\Users\Gebruiker\Documents\GitHub\Projectstage\wavFiles\Dataset 1\normaal\'; 
+filename = 'mic_44100_s16le_channel_0_TRAIN.wav';
 [x, Fs] = ReadSignal(path, filename);
 
 %% Resampling
@@ -9,7 +9,7 @@ reFs = 48000;
 y = Resampling(reFs,Fs, x);
 
 %% Windowing function helps split audio file in multiple input signals of 10 seconds each
-duration_window = 10000; %s
+duration_window = 10000; %ms
 [S, numSamples, N_perSample] = Windowing(y, reFs, duration_window);
 
 %% Then do the actual windowing for each input signal and extract features
@@ -105,4 +105,4 @@ for ii = 1:size(baseline,1)
     fprintf(fid,'%20.18f \t',baseline(ii,:));
     fprintf(fid,'\n');
 end
-fclose(fid)
+fclose(fid);

@@ -30,11 +30,9 @@ plot(t,x); xlabel('Seconds'); ylabel('Amplitude'); %Plot laat linker en rechter 
 axis([-inf inf -20 20])
 
 %% 
-ax1 = subplot(211);
+subplot(211)
 plot(x)
 axis([-inf inf -10 10])
  
-ax2 = subplot(212);
+subplot(212)
 specgram(x)
-
-linkaxes([ax1,ax2],'x')
