@@ -1,15 +1,15 @@
 %% Anomaly detection
 % Read audio data file (same as baseline script but other path and file)
 clc
-path = 'C:\Users\Gebruiker\Documents\GitHub\Projectstage\wavFiles\Dataset 1\normaal\'; 
-filename = 'mic_44100_s16le_channel_0_TEST.wav';
+path = 'C:\Users\Gebruiker\Documents\GitHub\Projectstage\wavFiles\Dataset 1\afwijking_praten\'; 
+filename = 'mic_44100_s16le_channel_0_WAV.wav';
 [x, Fs] = ReadSignal(path, filename);
 %% Resampling (exact the same as baseline script)
 reFs = 48000;
 y = Resampling(reFs,Fs, x);
 
 %% Windowing function helps split audio file in multiple input signals of 10 seconds each (exact the same as baseline script)
-duration_window = 10000; %ms
+duration_window = 60000; %ms
 [S, numSamples, N_perSample] = Windowing(y, reFs, duration_window);
 
 %% Then do the actual windowing for each input signal and extract features (exact the same as baseline script)

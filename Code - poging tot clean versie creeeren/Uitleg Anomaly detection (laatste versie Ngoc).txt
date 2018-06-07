@@ -18,12 +18,6 @@ De stappen voor elke sample zijn:
 - Daarna wordt er een betrouwbaarheidsinterval berekend voor de features
 - De betrouwbaarheidsintervallen leveren baseline op voor het normaal geluid. Dit wordt opgeslagen in een tx.file die later terug bekeken kan worden.
 
-	
-moeten deze samples geanalyseerd worden, daarvoor ga je het sample windowen in windows van 200 ms.
-(functiescript: nog geen, maar dit is een for loop omdat het voor elke sample gedaan moet worden. Dit kan in een functiescript apart worden gezet)
-- Dan doe de feature extraction voor elke window. 
-
-
 De volgende script is: Anomaly_detection.m. Wat dit script doet is:
 - inlezen van test geluid (afwijkend of testset van normaal geluid).
 - Resampling op 48000 Hz (zelfde als boven)
