@@ -1,0 +1,13 @@
+normaal = multi_feature_vectors;
+%%
+MU = zeros(size(1,numFeatures));
+SIGMA = zeros(numFeatures);
+for f = 1:numFeatures
+    MU(f) = mean(normaal(f,:));
+    SIGMA(f,f) = std(normaal(f,:));
+end
+
+%%
+afwijking = multi_feature_vectors; %pas op dat de naam hier zelfde is als bij 'normaal', houd daar rekening mee bij het runnen dus
+p = mvnpdf(MU, MU, SIGMA)
+%an anomaly als p<epsilon (zelf kiezen)
