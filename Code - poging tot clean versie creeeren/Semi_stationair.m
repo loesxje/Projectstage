@@ -109,9 +109,3 @@ for ii = 1:size(baseline,1)
     fprintf(fid,'\n');
 end
 fclose(fid);
-
-
-
-
-
-

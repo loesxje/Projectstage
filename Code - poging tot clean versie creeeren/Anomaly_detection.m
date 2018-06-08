@@ -69,9 +69,9 @@ comparison
 clc
 probabilities = zeros(numFeatures, 1);
 for feat = 1:numFeatures
-    pd = makedist('Normal', mu_sigma(feat,1), mu_sigma(feat,2));
+    %pd = makedist('Normal', mu_sigma(feat,1), mu_sigma(feat,2));
     val = multi_feature_vectors(feat);
-    probabilities(feat) = cdf(pd, val);
+    probabilities(feat) = normpdf(val, mu_sigma(feat,1), mu_sigma(feat,2)); % calculate probability density function of normal dist %icdf(pd, val);
 end
 probabilities
 
@@ -80,6 +80,26 @@ minimum = min(probabilities(:)); % min of P of the feat of the anomaly data
 maximum = max(probabilities(:)); % max of P of the feat of the anomaly data
 normalized = zeros(numFeatures,1);
 for feat = 1:numFeatures
-    normalized(feat) = (probabilities(feat) - minimum) / (maximum - minimum); % min-max normalization
+    normalized(feat) = 1 - (probabilities(feat) - minimum) / (maximum - minimum); % min-max normalization
 end
 normalized
+
+% De min/max is alleen genomen over de anomaly data en niet ook over de normale data
+% Verder vraag ik mij nog af waarom sommige waarden bij probabilities
+% groter zijn dan 1. Ik dacht dat p-values niet groter konden zijn dan 1.
+% Zoek dit nog even uit.
+
+%% Probeerscript
+% x = [-2,-1,0,1,2,3,4,5,6];
+% mu = 2;
+% sigma = 1;
+% y = normpdf(x,mu,sigma)'
+% 
+% minimum = min(y);
+% maximum = max(y);
+% 
+% normalized = zeros(length(y),1);
+% for feat = 1:length(y)
+%     normalized(feat) = 1 - (y(feat) - minimum) / (maximum - minimum); % min-max normalization
+% end
+% normalized
