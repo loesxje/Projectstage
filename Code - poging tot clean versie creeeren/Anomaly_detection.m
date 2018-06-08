@@ -1,7 +1,7 @@
 %% Anomaly detection
 % Read audio data file (same as baseline script but other path and file)
 clc
-path = 'C:\Users\Gebruiker\Documents\GitHub\Projectstage\wavFiles\Dataset 1\afwijking_praten\'; 
+path = 'C:\Users\Loes\Documents\GitHub\Projectstage\wavFiles\Dataset 1\afwijking_praten\'; 
 filename = 'mic_44100_s16le_channel_0_WAV.wav';
 [x, Fs] = ReadSignal(path, filename);
 %% Resampling (exact the same as baseline script)
@@ -60,3 +60,26 @@ comparison = zeros(size(numFeatures,1));
         comparison(f) = gem<baseline(f,1) | gem>baseline(f,2);
     end
 comparison
+
+
+
+
+
+%% Calculate probability for anomaly score
+clc
+probabilities = zeros(numFeatures, 1);
+for feat = 1:numFeatures
+    pd = makedist('Normal', mu_sigma(feat,1), mu_sigma(feat,2));
+    val = multi_feature_vectors(feat);
+    probabilities(feat) = cdf(pd, val);
+end
+probabilities
+
+%% Normalize probabilities
+minimum = min(probabilities(:)); % min of P of the feat of the anomaly data
+maximum = max(probabilities(:)); % max of P of the feat of the anomaly data
+normalized = zeros(numFeatures,1);
+for feat = 1:numFeatures
+    normalized(feat) = (probabilities(feat) - minimum) / (maximum - minimum); % min-max normalization
+end
+normalized

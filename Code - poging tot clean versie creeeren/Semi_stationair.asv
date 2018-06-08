@@ -110,8 +110,18 @@ for ii = 1:size(baseline,1)
 end
 fclose(fid);
 
+%% Calculate probability for anomaly score
+probabilities = zeros(numFeatures, 1);
+for feat = 1:numFeatures
+    pd = makedist('Normal', mu_sigma(feat,1), mu_sigma(feat,2));
+    xx = multi_feature_vectors(feat);
+    probabilities(feat) = cdf(pd, xx);
+end
 
-
-
-
-
+%% Normalize probabilities
+minimum = min(probabilities(:)); % min of P of the feat of the anomalies
+maximum = max(probabilities(:));
+normalized = zeros(numFeatures,1);
+for feat = 1:numFeatures
+    normalized(feat) = 1- (probabilities(feat) - minimum) / (maximum - minimum);
+end
