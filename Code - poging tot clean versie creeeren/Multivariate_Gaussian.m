@@ -1,15 +1,16 @@
+%Run eerst script semi_stationar.m
 normaal = multi_feature_vectors;
-%%
-MU = zeros(size(1,numFeatures));
-SIGMA = zeros(numFeatures);
+MU1 = zeros(size(1,numFeatures));
+SIGMA1 = zeros(numFeatures);
 for f = 1:numFeatures
-    MU(f) = mean(normaal(f,:));
-    SIGMA(f,f) = std(normaal(f,:));
+    MU1(f) = mean(normaal(f,:));
+    SIGMA1(f,f) = std(normaal(f,:));
 end
+%% Run daarna eerst anomaly detection
+afwijking = multi_feature_vectors;
 
-%%
-afwijking = multi_feature_vectors; %pas op dat de naam hier zelfde is als bij 'normaal', houd daar rekening mee bij het runnen dus
-p = mvnpdf(MU, MU, SIGMA)
+%pas op dat de naam hier zelfde is als bij 'normaal', houd daar rekening mee bij het runnen dus
+p = vpa(mvnpdf(afwijking', MU1, SIGMA1))
 %an anomaly als p<epsilon (zelf kiezen)
 
 

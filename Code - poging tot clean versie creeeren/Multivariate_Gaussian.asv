@@ -1,17 +1,25 @@
+%Run eerst scripy
 normaal = multi_feature_vectors;
-%%
-MU = zeros(size(1,numFeatures));
-SIGMA = zeros(numFeatures);
+MU1 = zeros(size(1,numFeatures));
+SIGMA1 = zeros(numFeatures);
 for f = 1:numFeatures
-    MU(f) = mean(normaal(f,:));
-    SIGMA(f,f) = std(normaal(f,:));
+    MU1(f) = mean(normaal(f,:));
+    SIGMA1(f,f) = std(normaal(f,:));
+end
+%%
+afwijking = multi_feature_vectors;
+zeros(size(1,numFeatures));
+SIGMA2 = zeros(numFeatures);
+for f = 1:numFeatures
+    MU2(f) = mean(afwijking(f,:));
+    SIGMA2(f,f) = std(afwijking(f,:));
 end
 
 %%
-afwijking = multi_feature_vectors; %pas op dat de naam hier zelfde is als bij 'normaal', houd daar rekening mee bij het runnen dus
-p = mvnpdf(MU, MU, SIGMA)
+ %pas op dat de naam hier zelfde is als bij 'normaal', houd daar rekening mee bij het runnen dus
+p = mvnpdf(MU2, MU1, SIGMA1)
 %an anomaly als p<epsilon (zelf kiezen)
 
 
 %zie voor interpretatie deze bron: https://nl.mathworks.com/help/stats/multivariate-normal-distribution.html
-%uitleg over gaussian is hier te vinden
+%uitleg over multivariate gaussian is hier te vinden: https://www.coursera.org/learn/machine-learning/lecture/DnNr9/anomaly-detection-using-the-multivariate-gaussian-distribution
