@@ -1,6 +1,6 @@
 %% Read audio data file
 clear, clc
-path = 'C:\Users\Loes\Documents\GitHub\Projectstage\wavFiles\Dataset 1\normaal\'; 
+path = 'C:\Users\Gebruiker\Documents\GitHub\Projectstage\wavFiles\Dataset 1\normaal\'; 
 filename = 'mic_44100_s16le_channel_0_TRAIN.wav';
 [x, Fs] = ReadSignal(path, filename);
 
@@ -9,7 +9,7 @@ reFs = 48000;
 y = Resampling(reFs,Fs, x);
 
 %% Windowing function helps split audio file in multiple input signals of 10 seconds each
-duration_window = 600; %ms
+duration_window = 60000; %ms
 [S, numSamples, N_perSample] = Windowing(y, reFs, duration_window);
 
 %% Then do the actual windowing for each input signal and extract features
@@ -88,27 +88,27 @@ end
 %      baseline_lower_upper(feat,:) = [meanFeat-stdFeat meanFeat+stdFeat];
 %  end
 
-%% Create semi-stationair baseline based on confidence interval (goede methode voor CI)
-baseline = zeros(numFeatures,2);
-mu_sigma = zeros(numFeatures,2);
-for feat = 1:numFeatures
-    meanFeat = mean(multi_feature_vectors_normaal(feat,:)); %mean of the samples
-    stdFeat = std(multi_feature_vectors_normaal(feat,:)); %standard deviation
-    mu_sigma(feat,:) = [meanFeat, stdFeat]; % save mu and sigma for every feat
-    n = length(multi_feature_vectors_normaal(feat,:)); %aantal samples
-    SEM = stdFeat/sqrt(n); %standard error
-    ts = tinv([0.025 0.975], n-1); %t-score
-    baseline(feat,:) = meanFeat + ts*SEM;
-    
-end
+% %% Create semi-stationair baseline based on confidence interval (goede methode voor CI)
+% baseline = zeros(numFeatures,2);
+% mu_sigma = zeros(numFeatures,2);
+% for feat = 1:numFeatures
+%     meanFeat = mean(multi_feature_vectors_normaal(feat,:)); %mean of the samples
+%     stdFeat = std(multi_feature_vectors_normaal(feat,:)); %standard deviation
+%     mu_sigma(feat,:) = [meanFeat, stdFeat]; % save mu and sigma for every feat
+%     n = length(multi_feature_vectors_normaal(feat,:)); %aantal samples
+%     SEM = stdFeat/sqrt(n); %standard error
+%     ts = tinv([0.025 0.975], n-1); %t-score
+%     baseline(feat,:) = meanFeat + ts*SEM;
+%     
+% end
     
 %% Store baseline in a .txt file
-fid = fopen('Baseline.txt','wt');
-for ii = 1:size(baseline,1)
-    fprintf(fid,'%20.18f \t',baseline(ii,:));
-    fprintf(fid,'\n');
-end
-fclose(fid);
+% fid = fopen('Baseline.txt','wt');
+% for ii = 1:size(baseline,1)
+%     fprintf(fid,'%20.18f \t',baseline(ii,:));
+%     fprintf(fid,'\n');
+% end
+% fclose(fid);
 
 %% Run eerst script semi_stationar.m
 MU = zeros(size(1,numFeatures));
@@ -117,3 +117,4 @@ for f = 1:numFeatures
     MU(f) = mean(multi_feature_vectors_normaal(f,:));
     SIGMA(f,f) = std(multi_feature_vectors_normaal(f,:));
 end
+SIGMANIEUWWW = cov(multi_feature_vectors_normaal'); %%Dit moet de nieuwe SIGMAA zijn!!!
