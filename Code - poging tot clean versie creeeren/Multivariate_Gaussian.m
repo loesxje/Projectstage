@@ -6,6 +6,7 @@ for f = 1:numFeatures
     MU1(f) = mean(normaal(f,:));
     SIGMA1(f,f) = std(normaal(f,:));
 end
+
 %% Run daarna eerst anomaly detection
 afwijking = multi_feature_vectors;
 

@@ -1,6 +1,6 @@
 %% Read audio data file
 clear, clc
-path = 'C:\Users\Loes\Documents\GitHub\Projectstage\wavFiles\Dataset 1\normaal\'; 
+path = 'C:\Users\Gebruiker\Documents\GitHub\Projectstage\wavFiles\Dataset 1\normaal\'; 
 filename = 'mic_44100_s16le_channel_0_TRAIN.wav';
 [x, Fs] = ReadSignal(path, filename);
 
