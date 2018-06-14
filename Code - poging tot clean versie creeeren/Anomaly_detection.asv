@@ -1,8 +1,8 @@
 %% Anomaly detection
 % Read audio data file (same as baseline script but other path and file)
-            %clc
-path = 'C:\Users\Loes\Documents\GitHub\Projectstage\wavFiles\Dataset 1\normaal\'; 
-filename = 'mic_44100_s16le_channel_0_TRAIN.wav';
+clc
+path = 'C:\Users\Loes\Documents\GitHub\Projectstage\wavFiles\Dataset 1\afwijking_boor\'; 
+filename = 'mic_44100_s16le_channel_0_WAV.wav';
 [x, Fs] = ReadSignal(path, filename);
 %% Resampling (exact the same as baseline script)
 reFs = 48000;
@@ -14,7 +14,7 @@ duration_window = 60000; %ms
 
 %% Then do the actual windowing for each input signal and extract features (exact the same as baseline script)
 duration_window = 200; %ms
-multi_feature_vectors_afwijking = [];
+multi_feature_vectors = [];
 for s=1:numSamples %for each input signal
     
     %Window the signal to 200 ms consecutive frames 
@@ -38,7 +38,7 @@ for s=1:numSamples %for each input signal
     end
     
     %Store all featurevectors of numSamples
-    multi_feature_vectors_afwijking = [multi_feature_vectors_afwijking feature_vector_signal];
+    multi_feature_vectors = [multi_feature_vectors feature_vector_signal];
 end
 
 %% Compare feature vector with the baseline (vervalt)
@@ -62,5 +62,47 @@ end
 % comparison
 
 
-%% Save features for anomaly data
-afwijking = multi_feature_vectors_afwijking;
+
+
+
+%% Calculate probability for anomaly score
+clc
+probabilities = zeros(numFeatures, 1);
+for feat = 1:numFeatures
+    %pd = makedist('Normal', mu_sigma(feat,1), mu_sigma(feat,2));
+    val = multi_feature_vectors(feat);
+    probabilities(feat) = normpdf(val, baseline_feat_mu_sigma(feat,1), baseline_feat_mu_sigma(feat,2)); % calculate probability density function of normal dist %icdf(pd, val);
+end
+probabilities
+
+%% Normalize probabilities
+minimum = min(probabilities(:)); % min of P of the feat of the anomaly data
+maximum = max(probabilities(:)); % max of P of the feat of the anomaly data
+normalized = zeros(numFeatures,1);
+for feat = 1:numFeatures
+    normalized(feat) = 1 - (probabilities(feat) - minimum) / (maximum - minimum) ; % min-max normalization
+end
+normalized * 100
+
+% De min/max is alleen genomen over de anomaly data en niet ook over de normale data
+% Verder vraag ik mij nog af waarom sommige waarden bij probabilities
+% groter zijn dan 1. Ik dacht dat p-values niet groter konden zijn dan 1.
+% Zoek dit nog even uit.
+
+%   MIN EN MAX VALUES ZIJN ALLEEN GEBASEERD OP DE ANOMALY DATA. BASEER ZE
+%   OOK OP DE NORMALE DATA.
+
+%% Probeerscript
+% x = [-2,-1,0,1,2,3,4,5,6];
+% mu = 2;
+% sigma = 1;
+% y = normpdf(x,mu,sigma)'
+% 
+% minimum = min(y);
+% maximum = max(y);
+% 
+% normalized = zeros(length(y),1);
+% for feat = 1:length(y)
+%     normalized(feat) = 1 - (y(feat) - minimum) / (maximum - minimum); % min-max normalization
+% end
+% normalized
