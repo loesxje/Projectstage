@@ -41,22 +41,18 @@ for s=1:numSamples %for each input signal
     multi_feature_vectors_afwijking = [multi_feature_vectors_afwijking feature_vector_signal];
 end
 
-%% Compare feature vector with the baseline (vervalt)
-% format long
-% comparison = zeros(size(multi_feature_vectors));
-% 
-% for s = 1:numSamples
-%     sample = multi_feature_vectors(:,s);
-%     for f = 1:numFeatures
-%         comparison(f,s) = sample(f)<baseline(f,1) | sample(f)>baseline(f,2);
-%     end
-% end
-% comparison       
-%         
-%% Compare THE MEAN of the feature vectors with the baseline 
-% comparison = zeros(size(numFeatures,1));
-%     for f = 1:numFeatures
-%         gem = mean(multi_feature_vectors(f,:));
-%         comparison(f) = gem<baseline(f,1) | gem>baseline(f,2);
-%     end
-% comparison
+
+%% Compare data to baseline (detect anomaly)
+alpha = 1; % How many sigma's from the mean
+p_bound = vpa(mvnpdf((MU' - (alpha * diag(SIGMA)))', MU, SIGMA)); % p value for the lower and upper bounds
+detect_anom = [];
+
+for p = 1:numel(probabilities_afwijking)
+    if (probabilities_afwijking(p) < double(p_bound))
+        detect_anom = [detect_anom 1];
+    else
+        detect_anom = [detect_anom 0];
+    end
+end
+
+
