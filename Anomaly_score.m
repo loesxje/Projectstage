@@ -23,9 +23,9 @@ clc
 %     end
 % end
 
-probabilities_afwijking = vpa(mvncdf(multi_feature_vectors_afwijking', MU, SIGMA));
-probabilities_normaal = vpa(mvncdf(multi_feature_vectors_normaal', MU, SIGMA));
-p_mu = vpa(mvnpdf(MU, MU, SIGMA));
+probabilities_afwijking = vpa(mvncdf(multi_feature_vectors_afwijking', MU, SIGMA)); % cdf value
+probabilities_normaal = vpa(mvncdf(multi_feature_vectors_normaal', MU, SIGMA)); % cdf value
+
 
 %% Normalize probabilities
 minimum = min([min(probabilities_afwijking), min(probabilities_normaal)]); % min of multivariate gaussian distribution of the normal data

@@ -9,7 +9,7 @@ reFs = 48000;
 y = Resampling(reFs,Fs, x);
 
 %% Windowing function helps split audio file in multiple input signals of 10 seconds each (exact the same as baseline script)
-duration_window = 6000; %ms
+duration_window = 600; %ms
 [S, numSamples, N_perSample] = Windowing(y, reFs, duration_window);
 
 %% Then do the actual windowing for each input signal and extract features (exact the same as baseline script)
@@ -43,6 +43,8 @@ end
 
 
 %% Compare data to baseline (detect anomaly)
+probabilities_afwijking = vpa(mvnpdf(multi_feature_vectors_afwijking', MU, SIGMA)); % pdf value
+
 alpha = 1; % How many sigma's from the mean
 p_bound = vpa(mvnpdf((MU' - (alpha * diag(SIGMA)))', MU, SIGMA)); % p value for the lower and upper bounds
 detect_anom = [];
@@ -54,5 +56,5 @@ for p = 1:numel(probabilities_afwijking)
         detect_anom = [detect_anom 0];
     end
 end
-
+detect_anom
 
