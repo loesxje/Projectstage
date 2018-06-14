@@ -1,6 +1,6 @@
 %% Read audio data file
 clear, clc
-path = 'C:\Users\Gebruiker\Documents\GitHub\Projectstage\wavFiles\Dataset 1\normaal\'; 
+path = 'C:\Users\Loes\Documents\GitHub\Projectstage\wavFiles\Dataset 1\normaal\'; 
 filename = 'mic_44100_s16le_channel_0_TRAIN.wav';
 [x, Fs] = ReadSignal(path, filename);
 
@@ -9,12 +9,12 @@ reFs = 48000;
 y = Resampling(reFs,Fs, x);
 
 %% Windowing function helps split audio file in multiple input signals of 10 seconds each
-duration_window = 60000; %ms
+duration_window = 6000; %ms
 [S, numSamples, N_perSample] = Windowing(y, reFs, duration_window);
 
 %% Then do the actual windowing for each input signal and extract features
 duration_window = 200; %ms
-multi_feature_vectors = [];
+multi_feature_vectors_normaal = [];
 for s=1:numSamples %for each input signal
     
     %Window the signal to 200 ms consecutive frames 
@@ -38,7 +38,7 @@ for s=1:numSamples %for each input signal
     end
     
     %Store all featurevectors of numSamples
-    multi_feature_vectors = [multi_feature_vectors feature_vector_signal];
+    multi_feature_vectors_normaal = [multi_feature_vectors_normaal feature_vector_signal];
 end
  %% Normalize feature values for each featurevector
 % for vect=1:numSamples
@@ -92,10 +92,10 @@ end
 baseline = zeros(numFeatures,2);
 mu_sigma = zeros(numFeatures,2);
 for feat = 1:numFeatures
-    meanFeat = mean(multi_feature_vectors(feat,:)); %mean of the samples
-    stdFeat = std(multi_feature_vectors(feat,:)); %standard deviation
+    meanFeat = mean(multi_feature_vectors_normaal(feat,:)); %mean of the samples
+    stdFeat = std(multi_feature_vectors_normaal(feat,:)); %standard deviation
     mu_sigma(feat,:) = [meanFeat, stdFeat]; % save mu and sigma for every feat
-    n = length(multi_feature_vectors(feat,:)); %aantal samples
+    n = length(multi_feature_vectors_normaal(feat,:)); %aantal samples
     SEM = stdFeat/sqrt(n); %standard error
     ts = tinv([0.025 0.975], n-1); %t-score
     baseline(feat,:) = meanFeat + ts*SEM;
@@ -109,3 +109,11 @@ for ii = 1:size(baseline,1)
     fprintf(fid,'\n');
 end
 fclose(fid);
+
+%% Run eerst script semi_stationar.m
+MU = zeros(size(1,numFeatures));
+SIGMA = zeros(numFeatures);
+for f = 1:numFeatures
+    MU(f) = mean(multi_feature_vectors_normaal(f,:));
+    SIGMA(f,f) = std(multi_feature_vectors_normaal(f,:));
+end

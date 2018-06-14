@@ -3,46 +3,35 @@ clc
     % Run Semi_stationair.m
     % Run Anomaly_detection.m
 
-
-
-%% Calculate probability for anomaly score
-probabilities_normaal = zeros(numFeatures, 1);
-probabilities_afwijking = zeros(numFeatures, 1);
-for feat = 1:numFeatures
-    %pd = makedist('Normal', mu_sigma(feat,1), mu_sigma(feat,2));
-    val = multi_feature_vectors(feat);
-    probabilities(feat) = normpdf(val, baseline_feat_mu_sigma(feat,1), baseline_feat_mu_sigma(feat,2)); % calculate probability density function of normal dist %icdf(pd, val);
+%% Calculate probability for anomaly score wiht Multivariate Gaussian
+% If the values are above the MU, then calculate the 1 - cdf(val, mu, std)
+% If below the MU, then calculate cdf(val, mu, std)
+for i = multi_feature_vectors_afwijking
+    if mean(i) > mean(MU)
+        probabilities_afwijking = 1 - vpa(mvncdf(multi_feature_vectors_afwijking', MU, SIGMA));
+    else
+        probabilities_afwijking = vpa(mvncdf(multi_feature_vectors_afwijking', MU, SIGMA));
+    end
 end
-probabilities
 
-%% Normalize probabilities
-minimum = min(probabilities(:)); % min of P of the feat of the anomaly data
-maximum = max(probabilities(:)); % max of P of the feat of the anomaly data
-normalized = zeros(numFeatures,1);
-for feat = 1:numFeatures
-    normalized(feat) = 1 - (probabilities(feat) - minimum) / (maximum - minimum) ; % min-max normalization
+for i = multi_feature_vectors_normaal
+    if mean(i) > mean(MU)
+        probabilities_normaal = 1 - vpa(mvncdf(multi_feature_vectors_normaal', MU, SIGMA));
+    else
+        probabilities_normaal = vpa(mvncdf(multi_feature_vectors_normaal', MU, SIGMA));
+    end
 end
-anom_score = normalized * 100
 
-% De min/max is alleen genomen over de anomaly data en niet ook over de normale data
-% Verder vraag ik mij nog af waarom sommige waarden bij probabilities
-% groter zijn dan 1. Ik dacht dat p-values niet groter konden zijn dan 1.
-% Zoek dit nog even uit.
+p_mu = vpa(mvnpdf(MU, MU, SIGMA));
 
-%   MIN EN MAX VALUES ZIJN ALLEEN GEBASEERD OP DE ANOMALY DATA. BASEER ZE
-%   OOK OP DE NORMALE DATA.
+%% Standardize probabilities
+minimum = min([min(probabilities_afwijking), min(probabilities_normaal)]); % min of multivariate gaussian distribution of the normal data
+maximum = max([max(probabilities_afwijking), max(probabilities_normaal)]); % max of multivariate gaussian distribution of the normal data
+standardized = zeros(length(probabilities_afwijking),1);
+for i = 1:length(probabilities_afwijking)
+    standardized(i) = 1 - (probabilities_afwijking(i) - minimum) / (maximum - minimum) ; % min-max normalization
+end
 
-%% Probeerscript
-% x = [-2,-1,0,1,2,3,4,5,6];
-% mu = 2;
-% sigma = 1;
-% y = normpdf(x,mu,sigma)'
-% 
-% minimum = min(y);
-% maximum = max(y);
-% 
-% normalized = zeros(length(y),1);
-% for feat = 1:length(y)
-%     normalized(feat) = 1 - (y(feat) - minimum) / (maximum - minimum); % min-max normalization
-% end
-% normalized
+%% Calculate anomaly score
+anom_score = standardized * 100
+

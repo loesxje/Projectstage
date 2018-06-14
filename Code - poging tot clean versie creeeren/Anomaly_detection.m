@@ -2,14 +2,14 @@
 % Read audio data file (same as baseline script but other path and file)
             %clc
 path = 'C:\Users\Loes\Documents\GitHub\Projectstage\wavFiles\Dataset 1\normaal\'; 
-filename = 'mic_44100_s16le_channel_0_TRAIN.wav';
+filename = 'mic_44100_s16le_channel_0_TEST.wav';
 [x, Fs] = ReadSignal(path, filename);
 %% Resampling (exact the same as baseline script)
 reFs = 48000;
 y = Resampling(reFs,Fs, x);
 
 %% Windowing function helps split audio file in multiple input signals of 10 seconds each (exact the same as baseline script)
-duration_window = 60000; %ms
+duration_window = 6000; %ms
 [S, numSamples, N_perSample] = Windowing(y, reFs, duration_window);
 
 %% Then do the actual windowing for each input signal and extract features (exact the same as baseline script)
@@ -60,7 +60,3 @@ end
 %         comparison(f) = gem<baseline(f,1) | gem>baseline(f,2);
 %     end
 % comparison
-
-
-%% Save features for anomaly data
-afwijking = multi_feature_vectors_afwijking;
