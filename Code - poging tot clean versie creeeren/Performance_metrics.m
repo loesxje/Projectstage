@@ -20,7 +20,7 @@ histogram(usual_scores, 'NumBins', 100, 'FaceColor', 'b')
 hold on
 histogram(unusual_scores, 'NumBins', 100, 'FaceColor', 'r')
 
-axis([0 100 0 100])
+axis([0 100 0 25])
 legend('usual', 'unusual')
 xlabel('Anomaly score')
 ylabel('Occurences')
@@ -46,6 +46,7 @@ xlabel('percentile')
 ylabel('distance')
 title('RP-Curve')
 legend('Distance in percentiles')
+axis([0 100 -100 100])
 
 %% Calculate RP-AUC 
 
@@ -53,10 +54,13 @@ a = 1;
 b = 100;
 m = ceil((b-a)/2);
 
-Simpsons = ((b-a)/6) * (dist_prc(a) + 4*dist_prc(m) + dist_prc(b)) % Simpson's rule
+RP_AUC = ((b-a)/6) * (dist_prc(a) + 4*dist_prc(m) + dist_prc(b)) % Simpson's rule
 
-txt = strcat('RP-AUC = ', int2str(Simpsons));
-text(40, 75, txt) % Add RP-AUC value in plot
+txt1 = strcat('RP-AUC = ', int2str(RP_AUC));
+text(40, 60, txt1) % Add RP-AUC value in plot
+txt2 = ('\alpha = 3')
+
+text(47, 52, txt2, 'interpreter', 'tex')
 
 
 

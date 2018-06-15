@@ -1,15 +1,15 @@
 %% Anomaly detection
 % Read audio data file (same as baseline script but other path and file)
             %clc
-path = 'C:\Users\Gebruiker\Documents\GitHub\Projectstage\wavFiles\Dataset 1\afwijking_boor\'; 
-filename = 'mic_44100_s16le_channel_0_WAV.wav';
+path = 'C:\Users\Loes\Documents\GitHub\Projectstage\wavFiles\Dataset 1\normaal\'; 
+filename = 'mic_44100_s16le_channel_0_TEST.wav';
 [x, Fs] = ReadSignal(path, filename);
 %% Resampling (exact the same as baseline script)
 reFs = 48000;
 y = Resampling(reFs,Fs, x);
 
 %% Windowing function helps split audio file in multiple input signals of 10 seconds each (exact the same as baseline script)
-duration_window = 60000; %ms
+duration_window = 5000; %ms
 [S, numSamples, N_perSample] = Windowing(y, reFs, duration_window);
 
 %% Then do the actual windowing for each input signal and extract features (exact the same as baseline script)
@@ -43,10 +43,10 @@ end
 
 
 %% Compare data to baseline (detect anomaly)
-probabilities_afwijking = vpa(mvnpdf(multi_feature_vectors_afwijking', MU, SIGMA)); % pdf value
+probabilities_afwijking = vpa(mvnpdf(multi_feature_vectors_afwijking', MU, VAR)); % pdf value
 
-alpha = 1; % How many sigma's from the mean
-p_bound = vpa(mvnpdf((MU' - (alpha * diag(SIGMA)))', MU, SIGMA)); % p value for the lower and upper bounds
+alpha = 3; % How many STD's from the mean
+p_bound = vpa(mvnpdf((MU' - (alpha * diag(STD)))', MU, VAR)); % p value for the lower and upper bounds
 detect_anom = [];
 
 for p = 1:numel(probabilities_afwijking)

@@ -2,6 +2,7 @@
 clc
     % Run Semi_stationair.m
     % Run Anomaly_detection.m
+    
 
 %% Calculate probability for anomaly score wiht Multivariate Gaussian
 % If the values are above the MU, then calculate the 1 - cdf(val, mu, sigma)
@@ -23,8 +24,8 @@ clc
 %     end
 % end
 
-probabilities_afwijking = vpa(mvncdf(multi_feature_vectors_afwijking', MU, SIGMA)); % cdf value
-probabilities_normaal = vpa(mvncdf(multi_feature_vectors_normaal', MU, SIGMA)); % cdf value
+probabilities_afwijking = vpa(mvncdf(multi_feature_vectors_afwijking', MU, VAR)); % cdf value
+probabilities_normaal = vpa(mvncdf(multi_feature_vectors_normaal', MU, VAR)); % cdf value
 
 
 %% Normalize probabilities
