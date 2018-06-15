@@ -1,0 +1,19 @@
+%Check normality of data
+%% Histogram
+for ii= 1:numFeatures
+    h = figure
+    histogram(multi_feature_vectors_normaal(ii,:))
+    xlabel(['Data of Feature ', num2str(ii)])
+    ylabel('Frequency')
+    title('Histogram')
+    fname = 'D:\path1\path2'
+    filename= sprintf('Histogram feature %d.jpeg',ii);
+    saveas(h,fullfile(fname,filename), 'jpeg)
+end
+%% Normal plot
+
+for jj=1:numFeatures
+    figure
+    normplot(multi_feature_vectors_normaal(jj,:))
+    xlabel(['Data of Feature ', num2str(jj)])
+end    

@@ -1,6 +1,6 @@
 %% Read audio data file
 clear, clc
-path = 'C:\Users\Loes\Documents\GitHub\Projectstage\wavFiles\Dataset 1\normaal\'; 
+path = 'C:\Users\Gebruiker\Documents\GitHub\Projectstage\wavFiles\Dataset 1\normaal\'; 
 filename = 'mic_44100_s16le_channel_0_TRAIN.wav';
 [x, Fs] = ReadSignal(path, filename);
 
@@ -9,7 +9,7 @@ reFs = 48000;
 y = Resampling(reFs,Fs, x);
 
 %% Windowing function helps split audio file in multiple input signals of 10 seconds each
-duration_window = 5000; %ms
+duration_window = 2000; %ms
 [S, numSamples, N_perSample] = Windowing(y, reFs, duration_window);
 
 %% Then do the actual windowing for each input signal and extract features
@@ -113,9 +113,10 @@ end
 %% Run eerst script semi_stationar.m
 MU = zeros(size(1,numFeatures));
 STD = zeros(numFeatures,1);
+
 for f = 1:numFeatures
     MU(f) = mean(multi_feature_vectors_normaal(f,:));
     STD(f) = std(multi_feature_vectors_normaal(f,:));
     VAR(f) = var(multi_feature_vectors_normaal(f,:));
 end
-SIGMA = cov(multi_feature_vectors_normaal'); %%Dit moet de nieuwe SIGMA zijn!!!
+
